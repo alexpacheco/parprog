@@ -1,0 +1,53 @@
+\mode<presentation>
+
+\defbeamertemplate*{title page}{customized}[1][]
+{ 
+    \begin{flushright}
+      \begin{beamercolorbox}[wd=\paperwidth,sep=8pt,right,#1]{title}
+        \ifx\inserttitlegraphic\@empty
+        \else
+%        \vskip0.25em
+               {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic}\hspace*{0.5cm}
+               \fi
+      \end{beamercolorbox}
+      \vspace*{0.25\paperheight}
+      \begin{beamercolorbox}[wd=\paperwidth,sep=8pt,right,#1]{title}
+        \usebeamerfont{title}\inserttitle\hspace*{1cm}
+        \ifx\insertsubtitle\@empty
+        \else
+        \vskip0.1pt
+               {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\hspace*{1cm}}
+               \fi
+      \end{beamercolorbox}
+      \vspace*{0.15\paperheight}
+      \begin{beamercolorbox}[wd=\paperwidth,sep=8pt,right,#1]{author}
+        \usebeamerfont{author}\insertauthor\hspace*{1cm}\par
+        \usebeamerfont{institute}\insertinstitute\hspace*{1cm}\par
+        \usebeamerfont{date}\insertdate\hspace*{1cm}
+      \end{beamercolorbox}
+    \end{flushright}
+%  }
+  \vskip0pt
+}
+
+% title page template
+\setbeamertemplate{background canvas}{%
+    \ifnum\c@framenumber=1%
+        \color{lubrown}\rule{\paperwidth}{\paperheight}
+    \else%
+        \color{lubg}\rule{\paperwidth}{\paperheight}
+    \fi%
+}
+
+% section page template
+\defbeamertemplate*{section page}{mysection}[1][]
+{
+  \begin{centering} 
+    \usebeamercolor[fg]{section title} 
+    \usebeamerfont{section title} 
+    \insertsection
+    \par 
+  \end{centering}   
+}
+\mode
+<all>
