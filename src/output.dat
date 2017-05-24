@@ -1,0 +1,58 @@
+Calculate PI
+[apacheco@philip038 solution]$ ./pic ; ./pif
+pi = 3.141592653590426
+time to compute = 0.75 seconds
+pi = 3.141592673590427
+time to compute = 0.751653 seconds
+[apacheco@philip038 solution]$ ./pic_omp ; ./pif_omp                                                                                                            
+pi = 3.141592653589952
+time to compute = 2.84693 seconds
+pi = 3.141592673589811
+time to compute = 2.614222 seconds
+[apacheco@philip038 solution]$ ./pic_ompr ; ./pif_ompr                                                                                                          
+pi = 3.141592653589828
+time to compute = 0.084933 seconds
+pi = 3.141592673589828
+time to compute = 0.087768 seconds
+[apacheco@philip038 solution]$ ./pic_acc ; ./pif_acc                                                                                                            
+pi = 3.141592653589793
+time to compute = 6.89338 seconds
+pi = 3.141592673589793
+time to compute = 6.721178 seconds
+
+
+SAXPY
+[apacheco@philip038 solution]$ ./saxpyc ; ./saxpyf
+SAXPY Time: 0.020000
+SAXPY Time: 0.023251
+[apacheco@philip038 solution]$ ./saxpyc_omp ; ./saxpyf_omp
+SAXPY Time: 0.760000
+SAXPY Time: 0.070944
+[apacheco@philip038 solution]$ ./saxpyc_acc ; ./saxpyf_acc                                                                                                      
+SAXPY Time: 0.000000
+SAXPY Time:        0.014319in secs
+
+
+MATMUL
+[apacheco@philip038 matmul]$ ./matmulc ; ./matmulf
+Computation Time serial: 0.46
+Date Transfer
+Serial 543.478261
+Computation Time serial: 2.158363
+Data Transfer
+Serial   0.000116
+[apacheco@philip038 matmul]$ ./matmulc_omp ; ./matmulf_omp                                                                                                      
+Computation Time serial: 0.78
+Date Transfer
+Serial 160.256410
+Computation Time OpenMP: 0.719565
+Data Transfer
+OpenMP   0.001390
+[apacheco@philip038 matmul]$ ./serialc ; ./serialf
+OPENMP-MM: Init time: 0.02   Calc time: 26.00   GFlop/s: 0.23
+OPENMP-MM: Init time:  0.057   Calc time: 25.366   GFlop/s:  0.237
+[apacheco@philip038 matmul]$ ./ompc ; ./ompf
+OPENMP-MM: Init time: 0.02   Calc time: 2.26   GFlop/s: 2.65
+OPENMP-MM: Init time:  0.065   Calc time:  2.159   GFlop/s:  2.779
+
+

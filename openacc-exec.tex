@@ -1,0 +1,33 @@
+    \begin{center}
+      \begin{tikzpicture}[scale=0.35]
+        \tikzstyle{every node}=[font=\tiny]
+        \filldraw[fill=gray!20!white,rounded corners=1mm] (0,-0.2) rectangle (7,10.2);
+        \filldraw[fill=blue!50!white,rounded corners=1.5mm] (0.2,0.1) rectangle (6.8,0.9);
+        \filldraw[fill=blue!50!white,rounded corners=1.5mm] (0.2,1.1) rectangle (6.8,1.9);
+        \filldraw[fill=blue!50!white,rounded corners=1.5mm] (0.2,2.1) rectangle (6.8,2.9);
+        \filldraw[fill=white,rounded corners=1.5mm] (0.2,3.1) rectangle (6.8,3.9);
+        \filldraw[fill=green!50!white,rounded corners=1.5mm] (0.2,4.1) rectangle (6.8,4.9);
+        \filldraw[fill=green!50!white,rounded corners=1.5mm] (0.2,5.1) rectangle (6.8,5.9);
+        \filldraw[fill=green!50!white,rounded corners=1.5mm] (0.2,6.1) rectangle (6.8,6.9);
+        \filldraw[fill=white,rounded corners=1.5mm] (0.2,7.1) rectangle (6.8,7.9);
+        \filldraw[fill=blue!50!white,rounded corners=1.5mm] (0.2,8.1) rectangle (6.8,8.9);
+        \filldraw[fill=blue!50!white,rounded corners=1.5mm] (0.2,9.1) rectangle (6.8,9.9);
+        \draw (3.4,3.5) node {!\$acc end parallel};
+        \draw (3.2,7.5) node {!\$acc parallel};
+        \draw[ultra thick,red] (7.5,1.5) -- (8.5,1.5) -- (8.5,9.0) -- (7.5,9.0);
+        \draw[->,ultra thick,red] (8.5,5.5) -- (10.5,5.5);
+        \draw[ultra thick,red] (-0.5,4.5) -- (-6.5,4.5) -- (-6.5,6.5) -- (-0.5,6.5);
+        \draw[->,ultra thick,red] (-6.5,5.5) -- (-7.5,5.5);
+        \filldraw[fill=gray!50!white,rounded corners=1mm] (-8.0,4.0) rectangle (-13.0,7,0);
+        \filldraw[fill=gray!50!white,rounded corners=1mm] (11.0,4.0) rectangle (16.0,7,0);
+        \draw (-10.5,5.5) node {GPU};
+        \draw (13.5,5.5) node {CPU};
+        \filldraw[fill=green!10!white] (-6.5,-1.0) rectangle (-0.5,4.0);
+        \draw (-3.5,3.5) node {Generate GPU code};
+        \draw (-3.5,2.5) node {Allocate GPU memory};
+        \draw (-3.5,1.5) node {copy input data};
+        \draw (-3.5,0.5) node {Execute GPU code};
+        \draw (-3.5,-0.5) node {copy output data};
+      \end{tikzpicture}
+      \vspace{-0.8cm}
+    \end{center}
