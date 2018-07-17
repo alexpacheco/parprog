@@ -1,12 +1,13 @@
-\documentclass[c,mathserif,compress,xcolor=svgnames]{beamer} 
+\documentclass[10pt,t]{beamer}
+%\documentclass[c,mathserif,compress,xcolor=svgnames]{beamer} 
 
 \input{mypreamble}
 
 \title{Introduction to OpenMP}
-\subtitle{2017~HPC~Workshop:~Parallel~Programming}
+\subtitle{2018~HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
-\institute{\href{http://researchcomputing.lehigh.edu}{LTS Research Computing}}
-\date{May~31~-~June~1,~2017}
+\institute{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
+\date{July~17~-~18,~2018}
     
 
 \begin{document}
@@ -540,7 +541,7 @@ Hello from thread   1, I am odd!
     \item Syntax:
     \begin{itemize}
       \item Fortran: \texttt{!\$omp parallel}
-      \item C/C++: \texttt{\#pragma for}
+      \item C/C++: \texttt{\#pragma omp parallel}
     \end{itemize}
     \item Loops are the most likely targets when parallelizing a serial program
     \item Syntax:
