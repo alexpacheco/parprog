@@ -1,5 +1,5 @@
 
-\setbeamersize{text margin left=10pt,text margin right=10pt}
+%\setbeamersize{text margin left=10pt,text margin right=10pt}
 \usetheme{lehigh}
 
 \usefonttheme{professionalfonts}
@@ -10,9 +10,9 @@
 \pgfsetlayers{background,main,foreground}
 
 % add packages to use
-\usepackage[latin1]{inputenc}
-\usepackage[english]{babel}
-\usepackage[normalem]{ulem}
+%\usepackage[latin1]{inputenc}
+%\usepackage[english]{babel}
+%\usepackage[normalem]{ulem}
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
@@ -66,24 +66,18 @@
 \newcolumntype{e}{>{\columncolor{lulime}}l}
 \newcolumntype{f}{>{\columncolor{lulime!50}}l}
 
-                              
-
-
-% Fix font size of nested itemize/enumerate
-\setbeamercolor{subitem}{fg=lubrown}
-\setbeamercolor{itemize/enumerate subbody}{fg=black!50!gray}
-\setbeamerfont{itemize/enumerate body}{}
-\setbeamerfont{itemize/enumerate subbody}{size=\scriptsize}
-\setbeamerfont{itemize/enumerate subsubbody}{size=\scriptsize}
-
-
-
+                           
 % LOGOS
+\pgfdeclareimage[height=0.55cm]{lucolor-logo}{LehighU_official-logo_Color.png}
+\rplogo{\pgfuseimage{lucolor-logo}}
+\pgfdeclareimage[height=0.55cm]{luwhite-logo}{LehighU_official-logo_White.png}
+\tplogo{\pgfuseimage{luwhite-logo}}
 % footer logo
-\pgfdeclareimage[width=0.3\paperwidth]{university-logo}{lulogo}
-\tllogo{\pgfuseimage{university-logo}}
+%\pgfdeclareimage[width=0.3\paperwidth]{university-logo}{lulogo}
+%\tllogo{\pgfuseimage{university-logo}}
 
 %titlepage logo
-\titlegraphic{\includegraphics[scale=0.5]{lu}}
+%\titlegraphic{\includegraphics[scale=0.5]{lu}}
 
+\beamertemplateballitem
 

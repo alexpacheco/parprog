@@ -1,13 +1,36 @@
 \documentclass[10pt,t]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fontfamily{ppl}\selectfont
+
+\usepackage{fontspec} 
+\defaultfontfeatures{Mapping=tex-text} 
+\setsansfont[Ligatures={Common}]{Futura}
+\setmonofont[Scale=0.8]{Monaco} 
+
 
 \include{mypreamble}
 
 \title{Parallel Programming Concepts}
-\subtitle{2018~HPC~Workshop:~Parallel~Programming}
-\author{Alexander B. Pacheco}
-\institute{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~17~-~18,~2018}
+\subtitle{2021~HPC~Workshop:~Parallel~Programming}
+\author{\large{Alexander~B.~Pacheco}}
+\institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
+\date{July~13~-~15,~2021}
 
+\AtBeginSection[]
+{
+%  \begingroup
+%  \setbeamertemplate{background canvas}[vertical shading][bottom=lubrown,top=lubrown]
+%  \setbeamertemplate{footline}[myfootline] 
+%  \setbeamertemplate{section page}[mysection]
+%  \frame[c]{
+%    \sectionpage
+%  }
+%  \endgroup
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
 
 \begin{document}
 
@@ -16,10 +39,12 @@
 \end{frame}
 
 \begin{frame}[c]{Outline}
-  \tableofcontents
+  \tableofcontents%[currentsection,currentsubsection, 
+%    hideothersubsections, 
+%    sectionstyle=show/shaded,
+%  ]
 \end{frame}
 
-\scriptsize
 \section{Introduction}
 \begin{frame}
   \frametitle{What is Serial Computing?}
@@ -135,10 +160,11 @@
     \item In most cases, serial programs run on modern computers "waste" potential computing power.
     \end{itemize}
     \framebreak
-  \item The Future:
     \begin{columns}[c]
       \column{0.5\textwidth}
+      \vspace{-0.25cm}
       \begin{itemize}
+      \item The Future:
       \item During the past 20+ years, the trends indicated by ever faster networks, distributed systems, and multi-processor computer architectures (even at the desktop level) clearly show that parallelism is the future of computing.
       \item In this same time period, there has been a greater than 500,000x increase in supercomputer performance, with no end currently in sight.
       \item The race is already on for Exascale Computing!
@@ -151,7 +177,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{  }
+  \vspace{1cm}
   \begin{itemize}
   \item Consider an example of moving a pile of boxes from location A to location B
   \item Lets say, it takes x mins per box. Total time required to move the boxes is 25x.
@@ -161,12 +187,33 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{ }
+  \vspace{1cm}
   \begin{itemize}
   \item You enlist more people to move the boxes.
   \item If 5 people move the boxes simultaneously, it should theoretically take 5x mins to move 25 boxes.
   \end{itemize}
-  \includegraphics[width=\textwidth,clip=true]{./Parallel}
+  \vspace{-0.9cm}
+  \begin{center}
+    \includegraphics[width=0.75\textwidth,clip=true]{./Parallel}
+    \vspace{-0.8cm}
+    \only<2>{
+    \begin{tabular}{|b|b|}
+      \hline
+      Number of People & Time (mins) \\
+      \hline
+      2 & 13x \\
+      3 & 9x \\
+      4 & 7x \\
+      5 & 5x \\
+      6 & 5x \\
+      7-8 & 4x \\
+      9-12 & 3x \\
+      13-24 & 2x \\
+      $\ge$25 & 1x \\
+      \hline
+    \end{tabular}
+    }
+  \end{center}
 \end{frame}
 
 \begin{frame}
@@ -337,99 +384,99 @@ for i = istart, iend
 \end{frame}
 
 
-\begin{frame}[fragile,allowframebreaks]
-\begin{lstlisting}[language=Python,basicstyle=\fontsize{4}{5}\selectfont\ttfamily]
-m __future__ import division
-
-import numpy as np
-from mpi4py import MPI
-from time import time
-
-#=============================================================================#
-
-my_N = 3000
-my_M = 3000
-
-#=============================================================================#
-
-NORTH = 0
-SOUTH = 1
-EAST = 2
-WEST = 3
-
-
-
-def pprint(string, comm=MPI.COMM_WORLD):
-    if comm.rank == 0:
-        print(string)
-
-
-if __name__ == "__main__":
-    comm = MPI.COMM_WORLD
-
-    mpi_rows = int(np.floor(np.sqrt(comm.size)))
-    mpi_cols = comm.size // mpi_rows
-    if mpi_rows*mpi_cols > comm.size:
-        mpi_cols -= 1
-    if mpi_rows*mpi_cols > comm.size:
-        mpi_rows -= 1
-
-    pprint("Creating a %d x %d processor grid..." % (mpi_rows, mpi_cols) )
-
-    ccomm = comm.Create_cart( (mpi_rows, mpi_cols), periods=(True, True), reorder=True)
-
-    my_mpi_row, my_mpi_col = ccomm.Get_coords( ccomm.rank )
-    neigh = [0,0,0,0]
-
-    neigh[NORTH], neigh[SOUTH] = ccomm.Shift(0, 1)
-    neigh[EAST],  neigh[WEST]  = ccomm.Shift(1, 1)
-
-
-    # Create matrices
-    my_A = np.random.normal(size=(my_N, my_M)).astype(np.float32)
-    my_B = np.random.normal(size=(my_N, my_M)).astype(np.float32)
-    my_C = np.zeros_like(my_A)
-
-    tile_A = my_A
-    tile_B = my_B
-    tile_A_ = np.empty_like(my_A)
-    tile_B_ = np.empty_like(my_A)
-    req = [None, None, None, None]
-
-    t0 = time()
-    for r in xrange(mpi_rows):
-        req[EAST]  = ccomm.Isend(tile_A , neigh[EAST])
-        req[WEST]  = ccomm.Irecv(tile_A_, neigh[WEST])
-        req[SOUTH] = ccomm.Isend(tile_B , neigh[SOUTH])
-        req[NORTH] = ccomm.Irecv(tile_B_, neigh[NORTH])
-
-        #t0 = time()
-        my_C += np.dot(tile_A, tile_B)
-        #t1 = time()
-
-        req[0].Waitall(req)
-        #t2 = time()
-        #print("Time computing %6.2f  %6.2f" % (t1-t0, t2-t1))
-    comm.barrier()
-    t_total = time()-t0
-
-    t0 = time()
-    np.dot(tile_A, tile_B)
-    t_serial = time()-t0
-
-    pprint(78*"=")
-    pprint("Computed (serial) %d x %d x %d in  %6.2f seconds" % (my_M, my_M, my_N, t_serial))
-    pprint(" ... expecting parallel computation to take %6.2f seconds" % (mpi_rows*mpi_rows*mpi_cols*t_serial / comm.size))
-    pprint("Computed (parallel) %d x %d x %d in        %6.2f seconds" % (mpi_rows*my_M, mpi_rows*my_M, mpi_cols*my_N, t_total))
-
-
-    #print "[%d] (%d,%d): %s" % (comm.rank, my_mpi_row, my_mpi_col, neigh)
-
-    comm.barrier()
-
-\end{lstlisting}
-
-\end{frame}
+%\begin{frame}<0>[fragile,allowframebreaks]
+%\begin{lstlisting}[language=Python,basicstyle=\fontsize{4}{5}\selectfont\ttfamily]
+%from __future__ import division
+%
+%import numpy as np
+%from mpi4py import MPI
+%from time import time
+%
+%#=============================================================================#
+%
+%my_N = 3000
+%my_M = 3000
+%
+%#=============================================================================#
+%
+%NORTH = 0
+%SOUTH = 1
+%EAST = 2
+%WEST = 3
+%
+%
+%
+%def pprint(string, comm=MPI.COMM_WORLD):
+%    if comm.rank == 0:
+%        print(string)
+%
+%
+%if __name__ == "__main__":
+%    comm = MPI.COMM_WORLD
+%
+%    mpi_rows = int(np.floor(np.sqrt(comm.size)))
+%    mpi_cols = comm.size // mpi_rows
+%    if mpi_rows*mpi_cols > comm.size:
+%        mpi_cols -= 1
+%    if mpi_rows*mpi_cols > comm.size:
+%        mpi_rows -= 1
+%
+%    pprint("Creating a %d x %d processor grid..." % (mpi_rows, mpi_cols) )
+%
+%    ccomm = comm.Create_cart( (mpi_rows, mpi_cols), periods=(True, True), reorder=True)
+%
+%    my_mpi_row, my_mpi_col = ccomm.Get_coords( ccomm.rank )
+%    neigh = [0,0,0,0]
+%
+%    neigh[NORTH], neigh[SOUTH] = ccomm.Shift(0, 1)
+%    neigh[EAST],  neigh[WEST]  = ccomm.Shift(1, 1)
+%
+%
+%    # Create matrices
+%    my_A = np.random.normal(size=(my_N, my_M)).astype(np.float32)
+%    my_B = np.random.normal(size=(my_N, my_M)).astype(np.float32)
+%    my_C = np.zeros_like(my_A)
+%
+%    tile_A = my_A
+%    tile_B = my_B
+%    tile_A_ = np.empty_like(my_A)
+%    tile_B_ = np.empty_like(my_A)
+%    req = [None, None, None, None]
+%
+%    t0 = time()
+%    for r in xrange(mpi_rows):
+%        req[EAST]  = ccomm.Isend(tile_A , neigh[EAST])
+%        req[WEST]  = ccomm.Irecv(tile_A_, neigh[WEST])
+%        req[SOUTH] = ccomm.Isend(tile_B , neigh[SOUTH])
+%        req[NORTH] = ccomm.Irecv(tile_B_, neigh[NORTH])
+%
+%        #t0 = time()
+%        my_C += np.dot(tile_A, tile_B)
+%        #t1 = time()
+%
+%        req[0].Waitall(req)
+%        #t2 = time()
+%        #print("Time computing %6.2f  %6.2f" % (t1-t0, t2-t1))
+%    comm.barrier()
+%    t_total = time()-t0
+%
+%    t0 = time()
+%    np.dot(tile_A, tile_B)
+%    t_serial = time()-t0
+%
+%    pprint(78*"=")
+%    pprint("Computed (serial) %d x %d x %d in  %6.2f seconds" % (my_M, my_M, my_N, t_serial))
+%    pprint(" ... expecting parallel computation to take %6.2f seconds" % (mpi_rows*mpi_rows*mpi_cols*t_serial / comm.size))
+%    pprint("Computed (parallel) %d x %d x %d in        %6.2f seconds" % (mpi_rows*my_M, mpi_rows*my_M, mpi_cols*my_N, t_total))
+%
+%
+%    #print "[%d] (%d,%d): %s" % (comm.rank, my_mpi_row, my_mpi_col, neigh)
+%
+%    comm.barrier()
+%
+%\end{lstlisting}
+%
+%\end{frame}
 
 \section{Parallel programming models}
 \begin{frame}
@@ -497,6 +544,7 @@ if __name__ == "__main__":
   \frametitle{Shared vs Distributed}
   \begin{columns}
     \column{5cm}
+    \vspace{-1cm}
     \begin{description}
     \item {Shared}
     \end{description}
@@ -512,7 +560,9 @@ if __name__ == "__main__":
       \item Data conflict issues
       \end{itemize}
     \end{itemize}
+    \includegraphics[width=\textwidth]{./fork_join2}
     \column{5cm}
+    \vspace{-1cm}
     \begin{description}
     \item {Distributed}
     \end{description}
@@ -528,6 +578,7 @@ if __name__ == "__main__":
       \item Data sharing is slow
       \end{itemize}
     \end{itemize}
+    \includegraphics[width=0.9\textwidth]{./msg_pass_model}
   \end{columns}
 \end{frame}
 
@@ -673,13 +724,6 @@ if __name__ == "__main__":
 
 \begin{frame}
   \frametitle{Synchronization issues - deadlock}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{./SBFP}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Deadlock}
   \begin{itemize}
   \item Often caused by "blocking" communication operations
     \begin{itemize}
@@ -772,31 +816,65 @@ if __name__ == "__main__":
     \end{itemize}
   \end{itemize}
 \end{frame}
+
+\begin{frame}{CPU vs GPU}
+  \centering{
+    \includegraphics[width=\textwidth]{./gpu-devotes-more-transistors-to-data-processing}
+  }
+\end{frame}
+	
 \begin{frame}
-  \frametitle{nVIDIA Kepler K80}
+  \frametitle{NVIDIA Tesla T4}
   \begin{columns}[c]
     \column{0.5\textwidth}
     \begin{itemize}
+    \item GPU Architecture: NVIDIA Turing
+    \item Tensor Cores: 320
+    \item CUDA Cores: 2560
     \item Performance: 
       \begin{itemize}
-      \item 1.87 TFlops (DP)
-      \item 5.6 TFlops (SP)
+      \item Single Precision: 8.1 TFLOPS
+      \item Mixed Precision (FP16/FP32): 65 TFLOPS
+      \item INT8: 130 TOPS
+      \item INT4: 260 TOPS
       \end{itemize}
-    \item GPU: 2x GK210
-    \item CUDA Cores: 4992
-    \item Memory (GDDR5): 24GB
-    \item Memory (Bandwidth): 480GBs
-    \item Features
-      \begin{itemize}
-      \item 192 SP CUDA Cores
-      \item 64 DP units
-      \item 32 Special function units (SFU)
-      \item 32 load/store units (LD/ST)
-      \end{itemize}
+    \item Memory (GDDR5): 16GB
+    \item Memory (Bandwidth): 320GBs
     \end{itemize}
     \column{0.5\textwidth}
-    \includegraphics[width=\textwidth]{./GK210-110}
+    \includegraphics[width=\textwidth]{./turing}
   \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{GPU Programming}
+  \begin{itemize}
+  \item a hierarchy of thread groups, shared memories, and barrier synchronization exposed to programmer as a minimal set of language extensions
+  \item provide fine-grained data parallelism and thread parallelism, nested within coarse-grained data parallelism and task parallelism
+  \item guide programmer to partitionthe problem into coarse sub-problems 
+  \item solved independently in parallel by blocks of threads, and each sub-problem into finer pieces that can be solved cooperatively in parallel by all threads within the block
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Streaming Multiprocessors}
+  \begin{itemize}
+  \item A GPU is built around an array of Streaming Multiprocessors (SMs). 
+  \item A multithreaded program is partitioned into blocks of threads that execute independently from each other. 
+  \item a GPU with more multiprocessors will automatically execute the program in less time than a GPU with fewer multiprocessors.
+    \includegraphics[width=0.5\textwidth]{automatic-scalability}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Memory Heirarchy}
+  \centering{
+    \includegraphics[width=0.5\textwidth]{./memory-hierarchy}
+    }
+\end{frame}
+
+\begin{frame}{GPU Program}
+  \centering{
+    \includegraphics[width=0.5\textwidth]{./heterogeneous-programming}
+    }
 \end{frame}
 
 \begin{frame}
@@ -816,60 +894,78 @@ if __name__ == "__main__":
     \item Threads need to access contiguous data
     \item Thread divergence needs to be eliminated
     \end{itemize}
+  \item Fine Grained Parallelism: relatively small amounts of computational work are done between communication events
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Intel Many Integrated Core Architecture}
-  \begin{itemize}
-  \item Leverage x86 architecture (CPU with many cores)
-  \item[] X86 cores are simpler, but allow for more compute throughput
-  \item Leverage existing x86 programming models
-  \item Dedicate much of the silicon to floating point ops
-  \item Cache coherent
-  \item Increase floating-point throughput
-  \item Implement as a separate device
-  \item Strip expensive features (out-of-order execution, branch prediction,
-    etc.)
-  \item Widen SIMD registers for more throughput
-  \item Fast (GDDR5) memory on card
-  \item Runs a full Linux operating system (BusyBox)
-  \end{itemize}
-\end{frame}
+%\begin{frame}<0>
+%  \frametitle{Intel Many Integrated Core Architecture}
+%  \begin{itemize}
+%  \item Leverage x86 architecture (CPU with many cores)
+%  \item[] X86 cores are simpler, but allow for more compute throughput
+%  \item Leverage existing x86 programming models
+%  \item Dedicate much of the silicon to floating point ops
+%  \item Cache coherent
+%  \item Increase floating-point throughput
+%  \item Implement as a separate device
+%  \item Strip expensive features (out-of-order execution, branch prediction,
+%    etc.)
+%  \item Widen SIMD registers for more throughput
+%  \item Fast (GDDR5) memory on card
+%  \item Runs a full Linux operating system (BusyBox)
+%  \end{itemize}
+%\end{frame}
+%
+%\begin{frame}<0>
+%  \frametitle{Intel Xeon Phi 7120P}
+%  \begin{itemize}
+%  \item Add-on to CPU-based system
+%  \item 16 GB memory
+%  \item 61 x86 64-bit cores (244 threads)
+%  \item single-core 1.2 GHz
+%  \item 512-bit vector registers
+%  \item 1.208 TFLOPS = 61 cores * 1.238 GHz * 16 DP FLOPs/cycle/core
+%  \end{itemize}
+%  \begin{center}
+%    \includegraphics[width=0.75\textwidth]{./intel_hpc_mica}
+%  \end{center}
+%\end{frame}
+%
+%\begin{frame}<0>
+%  \frametitle{MICs comparison to GPUs}
+%  \begin{itemize}
+%  \item Disadvantages
+%    \begin{itemize}
+%    \item Less acceleration
+%    \item In terms of computing power, one GPU beats one Xeon Phi
+%      for most cases currently.
+%    \end{itemize}
+%  \item Advantages
+%    \begin{itemize}
+%    \item X86 architecture
+%    \item IP-addressable
+%    \item Traditional parallelization (OpenMP, MPI)
+%    \item Easy programming, minor changes from CPU codes
+%    \item Offload: minor change of source code.
+%    \item New. Still a lot of room for improvement.
+%    \end{itemize}
+%  \end{itemize}
+%\end{frame}
+%
 
-\begin{frame}
-  \frametitle{Intel Xeon Phi 7120P}
+\begin{frame}{Recommended Further Reading}
   \begin{itemize}
-  \item Add-on to CPU-based system
-  \item 16 GB memory
-  \item 61 x86 64-bit cores (244 threads)
-  \item single-core 1.2 GHz
-  \item 512-bit vector registers
-  \item 1.208 TFLOPS = 61 cores * 1.238 GHz * 16 DP FLOPs/cycle/core
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.75\textwidth]{./intel_hpc_mica}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{MICs comparison to GPUs}
-  \begin{itemize}
-  \item Disadvantages
-    \begin{itemize}
-    \item Less acceleration
-    \item In terms of computing power, one GPU beats one Xeon Phi
-      for most cases currently.
-    \end{itemize}
-  \item Advantages
-    \begin{itemize}
-    \item X86 architecture
-    \item IP-addressable
-    \item Traditional parallelization (OpenMP, MPI)
-    \item Easy programming, minor changes from CPU codes
-    \item Offload: minor change of source code.
-    \item New. Still a lot of room for improvement.
-    \end{itemize}
+  \small{
+    \item \href{http://www.mcs.anl.gov/~itf/dbpp/}{"Designing and Building Parallel Programs", Ian Foster - from the early days of parallel computing, but still illuminating.}
+    \item \href{http://www-users.cs.umn.edu/~karypis/parbook/}{"Introduction to Parallel Computing", Ananth Grama, Anshul Gupta, George Karypis, Vipin Kumar.}
+    \item \href{https://ipcc.cs.uoregon.edu/curriculum.html}{University of Oregon - Intel Parallel Computing Curriculum}
+    \item UC Berkeley CS267, Applications of Parallel Computing, Prof. Jim Demmel, UCB \href{https://sites.google.com/lbl.gov/cs267-spr2021}{Spring 2021}
+    \item \href{http://heather.cs.ucdavis.edu/~matloff/158/PLN/ParProcBookS2011.pdf}{"Programming on Parallel Machines", Norm Matloff, UC Davis.}
+    \item \href{https://cvw.cac.cornell.edu/Parallel/}{Cornell Virtual Workshop: Parallel Programming Concepts and High-Performance Computing}
+    \item \href{https://pages.tacc.utexas.edu/~eijkhout/istc/istc.html}{Introduction to High Performance Scientific Computing", Victor Eijkhout, TACC}
+    \item \href{https://edoras.sdsu.edu/~mthomas/f17.705}{COMP 705: Advanced Parallel Computing (Fall, 2017), SDSU, Prof. Mary Thomas}
+    \item Slides based on material from \url{https://hpc.llnl.gov/training/tutorials}
+  }
   \end{itemize}
 \end{frame}
 

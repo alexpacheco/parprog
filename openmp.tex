@@ -1,13 +1,21 @@
 \documentclass[10pt,t]{beamer}
 %\documentclass[c,mathserif,compress,xcolor=svgnames]{beamer} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fontfamily{ppl}\selectfont
+
+\usepackage{fontspec} 
+\defaultfontfeatures{Mapping=tex-text} 
+\setsansfont[Ligatures={Common}]{Futura}
+\setmonofont[Scale=0.8]{Monaco} 
 
 \input{mypreamble}
 
 \title{Introduction to OpenMP}
-\subtitle{2018~HPC~Workshop:~Parallel~Programming}
+\subtitle{2021~HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
-\institute{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~17~-~18,~2018}
+\institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
+\date{July~13~-~15,~2021}
     
 
 \begin{document}
@@ -17,7 +25,6 @@
   \titlepage
 \end{frame}
 
-\scriptsize
 \begin{frame}
   \frametitle{Distributed Memory Model}
 %  \begin{columns}
@@ -87,6 +94,7 @@
 
 \begin{frame}
   \frametitle{Shared vs Distributed}
+  \vspace{-0.25cm}
 %  \begin{columns}
 %    \column{5cm}
     \begin{exampleblock}{Shared Memory}
@@ -165,18 +173,29 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Advantages of OpenMP}
+  \frametitle{Goals of OpenMP}
+  \vspace{-0.5cm}
   \begin{block}{}
     \begin{itemize}
-      \item Portability
-      \begin{itemize}
-        \item Standard among many shared memory platforms
-        \item Implemented in major compiler suites
-      \end{itemize}
+      \item Standardization
+        \begin{itemize}
+        \item Provide a standard among a variety of shared memory architectures/platforms
+        \item Jointly defined and endorsed by a group of major computer hardware and software vendors
+        \end{itemize}
+      \item Lean and Mean
+        \begin{itemize}
+        \item Establish a simple and limited set of directives for programming shared memory machines.
+        \item Significant parallelism can be implemented by using just 3 or 4 directives.
+        \end{itemize}
       \item Ease to use 
       \begin{itemize}
         \item Serial programs can be parallelized by adding compiler directives
         \item Allows for incremental parallelization - a serial program evolves into a parallel program by parallelizing different sections incrementally
+      \end{itemize}
+      \item Portability
+      \begin{itemize}
+        \item Standard among many shared memory platforms
+        \item Implemented in major compiler suites
       \end{itemize}
     \end{itemize}
   \end{block}
@@ -267,12 +286,12 @@
 
 \begin{frame}{Clauses}
   \begin{itemize}
+    \item if(scalar\_expression)
     \item private(list), shared(list)
     \item firstprivate(list), lastprivate(list)
     \item reduction(operator:list)
     \item schedule(method[,chunk\_size])
     \item nowait
-    \item if(scalar\_expression)
     \item num\_thread(num)
     \item threadprivate(list), copyin(list)
     \item ordered
@@ -309,6 +328,7 @@
     \item The {\bf parallel} directive forms a team of threads for parallel execution.
     \item Each thread executes the block of code within the OpenMP Parallel region.
   \end{itemize}
+  \vspace{-0.5cm}
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C}
@@ -320,8 +340,38 @@
     \end{exampleblock}
   \end{columns}
 \end{frame}
-\scriptsize
+
 \begin{frame}[fragile]
+  \frametitle{Compiling and Running OpenMP programs}
+  \vspace{-0.5cm}
+  \begin{itemize}
+    \item[Compiling:] \lstinline[basicstyle=\normalsize\ttfamily]|compiler options code|
+    \item The OpenMP compile flag varies based on the compiler
+      \begin{itemize}
+        \item[GNU:] \lstinline[basicstyle=\normalsize\ttfamily]|-fopenmp|
+        \item[Intel:] \lstinline[basicstyle=\normalsize\ttfamily]|-qopenmp|
+        \item[NVHPC:] \lstinline[basicstyle=\normalsize\ttfamily]|-mp|
+      \end{itemize}
+      \begin{lstlisting}[basicstyle=\small\ttfamily]
+[alp514.sol](1032): gfortran -fopenmp -o helloc hello.c
+[alp514.sol](1033): ifort -qopenmp -o hellof hello.f90
+      \end{lstlisting}
+    \item[Running]: Need to specify number of openmp threads to run code on
+      \begin{lstlisting}[basicstyle=\small\ttfamily]
+[alp514.hawk-b624](1001): OMP_NUM_THREADS=4 ./helloc
+Hello world
+Hello world
+Hello world
+Hello world
+[alp514.hawk-b624](1002): export OMP_NUM_THREADS=2
+[alp514.hawk-b624](1003): ./hellof
+ Hello World
+ Hello World
+      \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}<0>[fragile]
   \frametitle{Compilation and Execution}
   \begin{itemize}
     \item Use any compiler of your choices
@@ -361,9 +411,26 @@ Hello World
   \end{block}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Parallel Directive}
+  \begin{itemize}
+  \item The number of threads in a parallel region is determined by the following factors, in order of precedence:
+    \begin{itemize}
+    \item Evaluation of the IF clause
+    \item Setting of the NUM\_THREADS clause
+    \item Use of the omp\_set\_num\_threads() library function
+    \item Setting of the OMP\_NUM\_THREADS environment variable
+    \item Implementation default
+    \end{itemize}
+  \item Threads are numbered from 0 (master thread) to N-1
+  \end{itemize}
+\end{frame}
+
+
 
 \begin{frame}[fragile]
   \frametitle{Hello World: C}
+  {\scriptsize
   \begin{columns}
     \column{6cm}
     \tikzstyle{na} = [baseline=-.5ex]
@@ -412,12 +479,14 @@ Hello from thread 2 out of 4 threads
     \end{Verbatim}
     \end{exampleblock}
   \end{columns}
+  }
 \end{frame}
 
+{\scriptsize
 \begin{frame}[fragile]
   \frametitle{Hello World: Fortran}
   \begin{columns}
-    \column{8cm}
+    \column{6cm}
     \tikzstyle{na} = [baseline=-.5ex]
     \begin{block}{}
        \begin{tabular}{lc}
@@ -428,7 +497,8 @@ Hello from thread 2 out of 4 threads
         \\
         \quad {\color{blue} !\$omp parallel} \tikz[na] \node[coordinate] (n2) {}; & \\
         \\
-        \quad print '(a,i3,a,i3,a)', 'Hello from thread',{\color{red}omp\_get\_thread\_num()} \tikz[na] \node[coordinate] (n3) {}; , \& & \\
+        \quad print '(a,i3,a,i3,a)', 'Hello from thread', & \\
+        \quad\quad {\color{red}omp\_get\_thread\_num()} \tikz[na] \node[coordinate] (n3) {}; , \& & \\
         \quad\quad ' out of ' {\color{red}omp\_get\_num\_threads()}\tikz[na] \node[coordinate] (n4) {};,' threads' & \\
         \\
         \quad {\color{blue} !\$omp end parallel} \tikz[na] \node[coordinate] (n5) {}; & \\
@@ -441,8 +511,8 @@ Hello from thread 2 out of 4 threads
  %     \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t1) {OpenMP include file}; } 
  %     \item[]
       \item[]
-      \item[]
       \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t2) {Parallel region starts here};  } 
+      \item[]
       \item[]
       \item[] \tikz[baseline]{\node[fill=blue!20,anchor=base] (t3) {Runtime library functions};  }
       \item[]
@@ -456,7 +526,6 @@ Hello from thread 2 out of 4 threads
         \path[->] (t4) edge [bend left] (n5);
     \end{tikzpicture}
   \end{columns}
-  \vspace{0.8cm}
   \begin{columns}
     \column{8cm}
     \begin{exampleblock}{}
@@ -469,7 +538,7 @@ Hello from thread  3 out of   4 threads
     \end{exampleblock}
   \end{columns}
 \end{frame}
-
+}
 \footnotesize
 
 \begin{frame}[fragile]
@@ -503,8 +572,7 @@ Hello from thread  3 out of   4 threads
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
         \begin{Verbatim}
-[alp514.sol](1898): make helloc
-pgcc -mp  -o helloc hello.c
+[alp514.sol](1898): gcc -fopenmp  -o helloc hello.c
 [alp514.sol](1899): export OMP_NUM_THREADS=4
 [alp514.sol](1900): srun -p eng -n 1 -c 4 ./helloc
 Hello world from thread 0, I am even
@@ -521,7 +589,7 @@ Hello world from thread 2, I am even
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
         \begin{Verbatim}
-[alp514.sol](1906): pgfortran -mp  -o hellof hello.f90
+[alp514.sol](1906): nvfortran -mp  -o hellof hello.f90
 [alp514.sol](1907): interact -p eng -n 1 -c 4
 [alp514.sol-b110](893): OMP_NUM_THREADS=4 ./hellof
 Hello from thread   0, I am even!
@@ -535,25 +603,47 @@ Hello from thread   1, I am odd!
 \end{frame}
 
 \begin{frame}
-  \frametitle{Work Sharing: Parallel Loops}
+  \frametitle{Work Sharing}
   \begin{itemize}
     \item We need to share work among threads to achieve parallelism
-    \item Syntax:
-    \begin{itemize}
-      \item Fortran: \texttt{!\$omp parallel}
-      \item C/C++: \texttt{\#pragma omp parallel}
-    \end{itemize}
-    \item Loops are the most likely targets when parallelizing a serial program
-    \item Syntax:
-    \begin{itemize}
-      \item Fortran: \texttt{!\$omp do}
-      \item C/C++: \texttt{\#pragma omp for}
-    \end{itemize}
-    \item Other work sharing directives available
-    \begin{itemize}
-      \item Sections: \texttt{!\$omp sections} or \texttt{\#pragma sections} 
-      \item Tasks: \texttt{!\$omp task} or \texttt{\#pragma omp task}
-    \end{itemize}
+  \begin{columns}
+    \column{0.33\textwidth}
+    \begin{block}{Loops}
+      \centering{
+        {\scriptsize
+          \texttt{!\$omp do}
+          
+          \texttt{\#pragma omp for}
+          \\
+        }
+        \includegraphics[width=0.5\textwidth]{./work_share1}
+      }
+    \end{block}
+    \column{0.33\textwidth}
+    \begin{block}{Sections}
+      \centering{
+        {\scriptsize
+          \texttt{!\$omp sections} 
+          
+          \texttt{\#pragma sections} 
+          \\
+        }
+        \includegraphics[width=0.5\textwidth]{./work_share2}
+      }
+    \end{block}
+    \column{0.33\textwidth}
+    \begin{block}{Single}
+      \centering{
+        {\scriptsize
+          \texttt{!\$omp single}
+          
+          \texttt{\#pragma omp single}
+          \\
+        }
+        \includegraphics[width=0.5\textwidth]{./work_share3}
+      }
+    \end{block}
+  \end{columns}
     \item The parallel and work sharing directive can be combined as
     \begin{itemize}
       \item \texttt{!\$omp parallel do}
@@ -697,21 +787,24 @@ end program paralleldo
     \item SAXPY is a common operation in computations with vector processors included as part of the BLAS routines
     \item[] $y\leftarrow \alpha x + y$
     \item SAXPY is a combination of scalar multiplication and vector addition
-    \item Parallelize the following SAXPY code
+    \item Parallelize the code in the \texttt{exercise/saxpy} folder
+    \item Calculate the speedup with respect to serial code.
   \end{itemize}
-  \begin{columns}
-    \column{0.45\textwidth}
-    \begin{block}{C}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpC]{src/saxpy/exercise/saxpy.c}
-    \end{block}
-    \column{0.45\textwidth}
-    \begin{block}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/exercise/saxpy.f90}
-    \end{block}
-  \end{columns}
+%  \vspace{-0.5cm}
+%  \begin{columns}
+%    \column{0.45\textwidth}
+%    \begin{block}{C}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy.c}
+%    \end{block}
+%    \column{0.45\textwidth}
+%    \begin{block}{Fortran}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy.f90}
+%    \end{block}
+%  \end{columns}
 \end{frame}
 
-\begin{frame}{Solution: SAXPY}
+\begin{frame}<0>{Solution: SAXPY}
+  \vspace{-0.5cm}
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C}
@@ -728,10 +821,10 @@ end program paralleldo
       \begin{exampleblock}{}
         \begin{tabular}{|b|b|b|b|}
           \hline
-          \rowcolor{lublue}Language & Serial & OpenMP (10 Threads) & SpeedUp \\
+          \rowcolor{lublue}Language & Serial & OpenMP (6 Threads) & SpeedUp \\
           \hline
-          C & 0.050000 & 0.011806 & 4.235 \\ \hline
-          Fortran & 0.050255 & 0.011834 & 4.247 \\
+          C & 0.512128 & 0.087660 & 5.84 \\ \hline
+          Fortran & 0.504534 & 0.100535 & 5.02 \\
           \hline
         \end{tabular}
       \end{exampleblock}
@@ -739,42 +832,28 @@ end program paralleldo
   \end{columns}
 \end{frame}
 
-\begin{frame}[allowframebreaks]{Exercise: Matrix Multiplication}
-  \begin{itemize}
-    \item Most Computational code involve matrix operations such as matrix multiplication.
-    \item Consider a matrix {\bf C} of two matrices {\bf A} and {\bf B}:
-    \item[] Element {\it i,j} of {\bf C} is the dot product of the $i^{th}$ row of {\bf A} and $j^{th}$ column of {\bf B}
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{./matmul}
-  \end{center}
-  \framebreak
-  \begin{itemize}
-    \item Parallelize the following MATMUL code
-  \end{itemize}
-  \begin{columns}
-    \column{0.45\textwidth}
-    \begin{block}{C}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/exercise/matmul.c}
-    \end{block}
-    \column{0.45\textwidth}
-    \begin{block}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/exercise/matmul.f90}
-    \end{block}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Solution: MATMUL}
-  \begin{columns}
-    \column{0.45\textwidth}
-    \begin{exampleblock}{C}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_omp.c}
+\begin{frame}{SAXPY Timing}
+  \begin{exampleblock}{}
+    \begin{center}
+      \begin{tabular}{|b|b|b|b|b|}
+        \hline
+        \rowcolor{lublue}Threads & \multicolumn{2}{b|}{C} & \multicolumn{2}{b|}{Fortran} \\
+        \cline{2-5}
+        \rowcolor{lublue}& Timing (s) & Speed Up & Timing (s) & Speed Up \\
+        \hline
+        1 & 0.513491  &  1.00  & 0.504534  &   1.00 \\
+        2 & 0.264634  &  1.94  & 0.300650  &   1.68 \\
+        3 & 0.177902  &  2.89  & 0.234661  &   2.15 \\
+        4 & 0.135248  &  3.80  & 0.150547  &   3.35 \\
+        5 & 0.109646  &  4.68  & 0.120734  &   4.18 \\
+        6 & 0.087660  &  5.86  & 0.100535  &   5.02 \\
+        12 & 0.056454 &  9.10  & 0.050300  &  10.03 \\
+        24 & 0.048442 & 10.60  & 0.026623  &  18.95 \\
+        48 & 0.026348 & 19.49  & 0.025263  &  19.97 \\
+        \hline
+      \end{tabular}
+    \end{center}
     \end{exampleblock}
-    \column{0.45\textwidth}
-    \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_omp.f90}
-    \end{exampleblock}
-  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -787,13 +866,14 @@ end program paralleldo
     \end{itemize}
   \end{itemize}
   \begin{columns}
-    \column{0.6\textwidth}
+    \column{0.45\textwidth}
     \begin{center}
-      \includegraphics[width=0.5\textwidth]{./falsesharing}
-      \begin{exampleblock}{}
-        \lstinputlisting[language=OmpFortran,firstline=51,lastline=57]{./src/tmp.f90}
-      \end{exampleblock}
+      \includegraphics[width=0.75\textwidth]{./falsesharing}
     \end{center}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=51,lastline=57]{./src/tmp.f90}
+    \end{exampleblock}
   \end{columns}
 \end{frame}
 
@@ -813,8 +893,9 @@ end program paralleldo
   \end{itemize}
   \begin{columns}
     \column{0.5\textwidth}
+    \vspace{-0.5cm}
     \begin{exampleblock}{}
-      \lstinputlisting[language=OmpFortran,firstline=59,lastline=65]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=59,lastline=65]{./src/tmp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -839,22 +920,24 @@ end program paralleldo
 
 \begin{frame}
   \frametitle{Synchronization: Crtitical and Atomic}
-  \begin{itemize}
-    \item Critical: Only one thread at a time can enter a \texttt{critical} region 
-  \end{itemize}
+%  \begin{itemize}
+%    \item Critical: Only one thread at a time can enter a \texttt{critical} region 
+%  \end{itemize}
   \begin{columns}
     \column{0.5\textwidth}
-    \begin{exampleblock}{}
-      \lstinputlisting[language=OmpFortran,firstline=67,lastline=73]{./src/tmp.f90}
+    \begin{exampleblock}{Critical}
+      Only one thread at a time can enter a \texttt{critical} region
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=67,lastline=73]{./src/tmp.f90}
     \end{exampleblock}
-  \end{columns}
-  \begin{itemize}
-    \item Atomic: Only one thread at a time can update a memory location 
-  \end{itemize}
-  \begin{columns}
+%  \end{columns}
+%  \begin{itemize}
+%    \item Atomic: Only one thread at a time can update a memory location 
+%  \end{itemize}
+%  \begin{columns}
     \column{0.5\textwidth}
-    \begin{exampleblock}{}
-      \lstinputlisting[language=OmpFortran,firstline=75,lastline=81]{./src/tmp.f90}
+    \begin{exampleblock}{Atomic}
+      Only one thread at a time can update a memory location
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=75,lastline=81]{./src/tmp.f90}
     \end{exampleblock}  
   \end{columns}
 \end{frame}
@@ -949,6 +1032,7 @@ void wrong()
         \sum^N_{i=0}\,F(x_i)\Delta x \approx \pi
       \end{align*}
       \item[] \fontsize{4}{5}{ Meadows et al, A ``hands-on'' introduction to OpenMP, SC09 }
+      \item Parallelize the code in the \texttt{exercise/calcpi} folder
     \end{itemize}
     \column{5cm}
     \begin{center}
@@ -957,7 +1041,7 @@ void wrong()
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}<0>[fragile]
   \frametitle{Exercise: Rewrite for OpenMP parallelization}
   \begin{columns}
     \column{0.45\textwidth}
@@ -971,14 +1055,16 @@ void wrong()
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile,allowframebreaks]
+\begin{frame}<0>[fragile,allowframebreaks]
   \frametitle{Solution (Very Slow)}
   \begin{columns}
     \column{0.45\textwidth}
+    \vspace{-0.5cm}
     \begin{exampleblock}{C/C++}
       \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpC]{./src/calc_pi/solution/pi_omp1.c}
     \end{exampleblock}
     \column{0.45\textwidth}
+    \vspace{-0.5cm}
     \begin{exampleblock}{Fortran}
       \lstinputlisting[basicstyle=\fontsize{5}{6}\ttfamily,language=OmpFortran]{./src/calc_pi/solution/pi_omp1.f90}
     \end{exampleblock}
@@ -1035,7 +1121,7 @@ time to compute = 7.368610 seconds
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
       {\tiny
-        \begin{lstlisting}[basicstyle=\tiny\ttfamily,language=OmpC]
+        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=OmpC]
 #include <omp.h>
 int main() {
   int i, n = 100, sum , a[100], b[100];
@@ -1055,7 +1141,7 @@ int main() {
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
       {\tiny
-        \begin{lstlisting}[basicstyle=\tiny\ttfamily,language=OmpFortran]
+        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=OmpFortran]
 program reduction
   
   implicit none
@@ -1085,7 +1171,7 @@ end program reduction
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,allowframebreaks]
+\begin{frame}<0>[fragile,allowframebreaks]
   \frametitle{Solution: pi calculation with reduction}
   \begin{columns}
     \column{5cm}
@@ -1131,6 +1217,72 @@ time to compute = 0.400939 seconds
   \end{block}
 \end{frame}
 
+\begin{frame}{Exercise: Matrix Multiplication}
+  \begin{itemize}
+    \item Most Computational code involve matrix operations such as matrix multiplication.
+    \item Consider a matrix {\bf C} of two matrices {\bf A} and {\bf B}:
+    \item[] Element {\it i,j} of {\bf C} is the dot product of the $i^{th}$ row of {\bf A} and $j^{th}$ column of {\bf B}
+      \begin{center}
+        \includegraphics[width=0.5\textwidth]{./matmul}
+      \end{center}
+    \item Parallelize the code in the \texttt{exercise/matmul} folder
+    \item Calculate the speedup with respect to serial code.
+  \end{itemize}
+%  \framebreak
+%  \begin{columns}
+%    \column{0.45\textwidth}
+%    \vspace{-1cm}
+%    \begin{block}{C}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/exercise/matmul.c}
+%    \end{block}
+%    \column{0.45\textwidth}
+%    \vspace{-1cm}
+%    \begin{block}{Fortran}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/exercise/matmul.f90}
+%    \end{block}
+%  \end{columns}
+\end{frame}
+
+\begin{frame}<0>{MATMUL Timing}
+  \begin{exampleblock}{}
+    \begin{center}
+      \begin{tabular}{|b|b|b|b|b|}
+        \hline
+        \rowcolor{lublue}Threads & \multicolumn{2}{b|}{C} & \multicolumn{2}{b|}{Fortran} \\
+        \cline{2-5}
+        \rowcolor{lublue}& Timing (s) & Speed Up & Timing (s) & Speed Up \\
+        \hline
+        1 & 0.513491  &  1.00  & 0.504534  &   1.00 \\
+        2 & 0.264634  &  1.94  & 0.300650  &   1.68 \\
+        3 & 0.177902  &  2.89  & 0.234661  &   2.15 \\
+        4 & 0.135248  &  3.80  & 0.150547  &   3.35 \\
+        5 & 0.109646  &  4.68  & 0.120734  &   4.18 \\
+        6 & 0.087660  &  5.86  & 0.100535  &   5.02 \\
+        12 & 0.056454 &  9.10  & 0.050300  &  10.03 \\
+        24 & 0.048442 & 10.60  & 0.026623  &  18.95 \\
+        48 & 0.026348 & 19.49  & 0.025263  &  19.97 \\
+        \hline
+      \end{tabular}
+    \end{center}
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}<0>{Solution: MATMUL}
+  \vspace{-0.5cm}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \vspace{-0.5cm}
+    \begin{exampleblock}{C}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_omp.c}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \vspace{-0.5cm}
+    \begin{exampleblock}{Fortran}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_omp.f90}
+    \end{exampleblock}
+  \end{columns}
+\end{frame}
+
 \begin{frame}
   \frametitle{Runtime Library Functions}
   \begin{itemize}
@@ -1161,10 +1313,10 @@ time to compute = 0.400939 seconds
   \end{itemize}
 \end{frame}
 
+
 \begin{frame}
   \frametitle{References}
   \begin{itemize}
-    \item \url{https://docs.loni.org/wiki/Using_OpenMP}
     \item \url{http://en.wikipedia.org/wiki/OpenMP}
     \item \url{http://www.nersc.gov/nusers/help/tutorials/openmp}
     \item \url{http://www.llnl.gov/computing/tutorials/openMP}

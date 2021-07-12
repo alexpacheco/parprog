@@ -1,12 +1,20 @@
 \documentclass[10pt,t]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fontfamily{ppl}\selectfont
+
+\usepackage{fontspec} 
+\defaultfontfeatures{Mapping=tex-text} 
+\setsansfont[Ligatures={Common}]{Futura}
+\setmonofont[Scale=0.8]{Monaco} 
 
 \input{mypreamble}
 
 \title{Introduction to OpenACC}
-\subtitle{2017~HPC~Workshop:~Parallel~Programming}
+\subtitle{2021~HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
-\institute{\href{http://researchcomputing.lehigh.edu}{LTS Research Computing}}
-\date{May~31~-~June~1,~2017}
+\institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
+\date{July~13~-~15,~2021}
     
 
 \begin{document}
@@ -15,17 +23,102 @@
   \titlepage
 \end{frame}
 
-\scriptsize
-\begin{frame}{ What is OpenACC?}
-  \begin{block}{}
-    \begin{itemize}
-      \item OpenACC Application Program Interface describes a collection of compiler directive to specify loops and regions of code in standard C, C++ and Fortran to be offloaded from a host CPU to an attached accelerator.
-      \item provides portability across operating systems, host CPUs and accelerators
-    \end{itemize}
-  \end{block}
+\begin{frame}{CPU vs GPU}
+  \begin{description}
+    \item[CPU]: consists of a few cores optimized for sequential serial processing
+    \item[GPU]: has a massively parallel architecture consisting of thousands of smaller, more efficient cores designed for handling multiple tasks simultaneously
+    \item[] \href{http://www.nvidia.com/object/gpu-applications.html}{GPU enabled applications}
+  \end{description}
+  \centering{
+    \only<1>{\includegraphics[width=0.5\textwidth]{./cpu-and-gpu} }
+    \only<2>{\includegraphics[width=0.75\textwidth]{./gpu-devotes-more-transistors-to-data-processing} }
+    \only<3>{\includegraphics[width=0.75\textwidth]{./floating-point-operations-per-second} }
+    \only<4>{\includegraphics[width=0.5\textwidth]{./memory-bandwidth} }
+    }
 \end{frame}
 
-\begin{frame}[allowframebreaks]{\small OpenACC}
+\begin{frame}{GPU Design}
+  \vspace{0.25cm}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{./Slide03}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Hetergenous Programming}
+  \begin{center}
+    \includegraphics[width=\textwidth]{./application_code}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Accelerate Application for GPU}
+  \begin{center}
+    \includegraphics[width=\textwidth]{./gpuaccelerateapp}
+  \end{center}
+\end{frame}
+
+\begin{frame}{GPU Accelerated Libraries}
+  \begin{center}
+    \includegraphics[width=\textwidth]{./gpuacceleratedapps}
+  \end{center}
+\end{frame}
+
+\begin{frame}{GPU Programming Languages}
+  \begin{center}
+    \includegraphics[width=\textwidth]{./gpuproglang}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Accelerator Fundamentals}
+  \begin{itemize}
+    \item We must expose enough parallelism to saturate the device
+      \begin{itemize}
+        \item Accelerator threads are slower than CPU threads
+        \item Accelerators have orders of magnitude more threads
+      \end{itemize}
+    \item Fine grained parallelism is good
+    \item Coarse grained parallelism is bad
+      \begin{itemize}
+        \item Lots of legacy apps have only exposed coarse grain parallelism
+          \begin{itemize}
+            \item i.e. MPI and possibly OpenMP
+          \end{itemize}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{What is OpenACC?}
+  \begin{columns}
+  \column{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=\textwidth]{./whatisopenacc}
+  \end{center}
+  \column{0.5\textwidth}
+  \begin{block}{}
+    \begin{itemize}
+      \item Open Standard
+      \item Easy, Compiler-Driven Approach
+      \item portable across host CPUs and accelerators
+      %\item OpenACC Application Program Interface describes a collection of compiler directive to specify loops and regions of code in standard C, C++ and Fortran to be offloaded from a host CPU to an attached accelerator.
+      %\item provides portability across operating systems, host CPUs and accelerators
+    \end{itemize}
+  \end{block}
+  \end{columns}	
+
+  \framebreak
+
+  \begin{exampleblock}{History}
+    \begin{itemize}
+    \item OpenACC was developed by The Portland Group (PGI), Cray, CAPS and NVIDIA. 
+    \item PGI, Cray, and CAPs have spent over 2 years developing and shipping commercial compilers that use directives to enable GPU acceleration as core technology. 
+    \item The small differences between their approaches allowed the formation of a group to standardize a single directives approach for accelerators and CPUs.
+    \item Full OpenACC 2.0 Specification available online 
+      \begin{itemize}
+      \item \url{http://www.openacc-standard.org/}
+      \item Implementations available now from PGI and Cray
+      \end{itemize}
+    \end{itemize}
+  \end{exampleblock}
+
   \begin{exampleblock}{The Standard for GPU Directives}
     \begin{description}
       \item[Simple:] Directive are the easy path to accelerate compute intensive applications
@@ -33,7 +126,9 @@
       \item[Powerful:] GPU directives allow complete access to the massive parallel power of a GPU
     \end{description}
   \end{exampleblock}
-  \framebreak
+\end{frame}
+
+\begin{frame}{What is OpenACC?}
   \begin{exampleblock}{High Level}
     \begin{itemize}
       \item Compiler directives to specify parallel regions in C \& Fortran
@@ -83,151 +178,6 @@
   \end{alertblock}
 \end{frame}
 
-\begin{frame}{Exercises:}
-  \begin{itemize}
-    \item Recall the following three exercises from yesterday's OpenMP tutorial
-    \begin{enumerate}
-      \item SAXPY: Generalized vector addition
-      \item Matrix Multiplication
-      \item Calculate pi by Numerical Integration
-    \end{enumerate}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{ SAXPY}
-  \begin{itemize}
-    \item SAXPY is a common operation in computations with vector processors included as part of the BLAS routines
-    \item[] $y\leftarrow \alpha x + y$
-%    \item SAXPY is a combination of scalar multiplication and vector addition
-    \item Write a SAXPY code to multiply a vector with a scalar.
-  \end{itemize}
-  \begin{algorithm}[H]
-    \caption{Pseudo Code for SAXPY}
-    \begin{algorithmic}
-      \Program{saxpy}{}
-      \State $n \gets$ some large number
-      \State $x(1:n) \gets$ some number say, 1
-      \State $y(1:n) \gets$ some other number say, 2
-      \State $a \gets$ some other number ,say, 3
-      \Do{$i \gets 1\cdots n$}
-      \State $y_i \gets y_i + a * x_i$
-      \EndDo
-      \EndProgram{saxpy}
-    \end{algorithmic}
-  \end{algorithm}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Matrix Multiplication}
-  \begin{itemize}
-    \item Most Computational code involve matrix operations such as matrix multiplication.
-    \item Consider a matrix {\bf C} which is a product of two matrices {\bf A} and {\bf B}:
-    \item[] Element {\it i,j} of {\bf C} is the dot product of the $i^{th}$ row of {\bf A} and $j^{th}$ column of {\bf B}
-    \item Write a MATMUL code to multiple two matrices.
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{./matmul}
-  \end{center}
-
-  \begin{algorithm}[H]
-    \caption{Pseudo Code for MATMUL}
-    \begin{algorithmic}
-      \Program{matmul}{}
-      \State $m,n \gets$ some\,large\,number $\le 1000$
-      \State Define $a_{mn}, b_{nm}, c_{mm}$
-      \State $a_{ij} \gets i+j; b_{ij} \gets i-j; c_{ij} \gets 0$
-      \Do{$i \gets 1\cdots m$}
-      \Do{$j \gets 1\cdots m$}
-      \State $c_{i,j} \gets \sum^{n}_{k=1} a_{i,k}*b_{k,j}$
-      \EndDo
-      \EndDo
-      \EndProgram{matmul}
-    \end{algorithmic}
-  \end{algorithm}
-\end{frame}
-
-\begin{frame}[allowframebreaks]{Calculate pi by Numerical Integration}
-  \begin{columns}
-    \column{5cm}
-    \begin{itemize}
-      \item We know that
-      \begin{align*}
-        \int^1_0 \dfrac{4.0}{(1+x^2)}\, dx = \pi
-      \end{align*}
-      \item So numerically, we can approxiate pi as the sum of a number of rectangles
-      \begin{align*}
-        \sum^N_{i=0}\,F(x_i)\Delta x \approx \pi
-      \end{align*}
-      \item[] \fontsize{4}{5}{ Meadows et al, A ``hands-on'' introduction to OpenMP, SC09 }
-    \end{itemize}
-    \column{5cm}
-    \begin{center}
-      \includegraphics[width=4cm]{./pi}
-    \end{center}
-  \end{columns}
-
-  \begin{algorithm}[H]
-    \caption{Pseudo Code for Calculating Pi}
-    \begin{algorithmic}
-        \Function{calculate\_pi}{}
-        \State $step \gets 1/n$
-        \State $sum \gets 0$
-        \Do{$i \gets 0\cdots n$}
-        \State $x \gets (i+0.5)*step; sum \gets sum + 4/(1+x^2)$
-        \EndDo
-        \State $pi \gets sum * step$
-        \EndFunction
-    \end{algorithmic}
-  \end{algorithm}
-\end{frame}
-
-\begin{frame}[fragile]{\small Simple Example {\color{black}I}}
-  \begin{exampleblock}{Serial Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy.f90} 
-  \end{exampleblock}
-\end{frame}
-\begin{frame}[fragile]{\small Simple Example {\color{black}II}}
-  \begin{exampleblock}{OpenMP Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_omp.f90} 
-  \end{exampleblock}
-\end{frame}
-\begin{frame}[fragile]{\small Simple Example {\color{black}III}}
-  \begin{exampleblock}{OpenACC Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_acc.f90} 
-  \end{exampleblock}
-\end{frame}
-\begin{frame}[fragile]{\small Simple Example {\color{black}IV}}
-  \begin{exampleblock}{CUDA Fortran Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_cuda.f90} 
-  \end{exampleblock}
-\end{frame}
-
-\begin{frame}[fragile]{\small Simple Example {\color{black}V}}
-  \begin{exampleblock}{Compile}
-    {\tiny
-      \begin{Verbatim}
-[apacheco@mike1 2013-LONI]$ pgf90 -o saxpy saxpy.f90
-[apacheco@mike1 2013-LONI]$ pgf90 -mp -o saxpy_omp saxpy_omp.f90
-[apacheco@mike1 2013-LONI]$ pgf90 -acc -ta=nvidia -o saxpy_acc saxpy_acc.f90
-[apacheco@mike1 2013-LONI]$ pgf90 -o saxpy_cuda saxpy.cuf
-      \end{Verbatim}
-    }
-  \end{exampleblock}
-  \begin{exampleblock}{Speed Up}
-    \begin{center}
-      \begin{tabular}{|bbbb|}
-        \hline
-        \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
-        \hline
-        Serial & Xeon E5-2670 & 0.986609 & 1\\
-        OpenMP (8 threads) & Xeon E5-2670 & 0.241465 & 4.1x\\
-        OpenACC & M2090 & 0.059418 & 16.6x\\
-        CUDA & M2090 & 0.005205 & 189.5x\\
-        \hline
-      \end{tabular}
-    \end{center}
-  \end{exampleblock}
-\end{frame}
-
 \begin{frame}{ OpenACC Execution Model}
   \begin{exampleblock}{}
     \begin{itemize}
@@ -239,8 +189,303 @@
   \end{exampleblock}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{\small Building Block of OpenACC}
+\begin{frame}[fragile]{OpenACC Directive Syntax}
+  \begin{exampleblock}{C/C++}
+    \lstinline[basicstyle=\fontsize{12}{14}\selectfont,language=OmpC]|#pragma acc directive [clause [,] clause] ...]|
+\\
+     ... often followed by a structured code block
+  \end{exampleblock}
+
+  \begin{exampleblock}{Fortran}
+    \lstinline[basicstyle=\fontsize{12}{14}\selectfont,language=OmpFortran]|!$acc directive [clause [,] clause] ...]|
+      \\
+      ...often paired with a matching end directive surrounding a structured  code block:
+      \\
+      \lstinline[basicstyle=\fontsize{12}{14}\selectfont,language=OmpFortran]|!$acc end directive|
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile,c]{OpenACC kernels directive}
+  \begin{itemize}
+  \item[C:] \Verbred{\#pragma acc kernels [clause]}
+  \item[Fortran] \Verbred{!\$acc kernels [clause]}
+  \item The kernels directive expresses that a region may contain parallelism and the compiler determines what can be safely parallelized.
+  \item The compiler breaks code in the kernel region into a sequence of kernels for execution on the accelerator device.
+  \item {\color{red}What is a kernel?} {\color{DarkGreen}A function that runs in parallel on the GPU.}
+  \item When a program encounters a kernels contruct, it will launch a sequence of kernels in order on the device.
+  \end{itemize}
+  \vspace{-0.5cm}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{Fortran}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=98,lastline=107]{src/tmp.f90}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{C/C++}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=50,lastline=60]{src/tmp.c}
+    \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,c]{OpenACC Parallel Directive}
+  \begin{itemize}
+  \item The {\bf parallel} directive identifies a block of code as having parallelism.
+  \item Compiler generates a parallel kernel for that loop.
+  \item[C:] \Verbred{\#pragma acc parallel [clauses]}
+  \item[Fortran:] \Verbred{!\$acc parallel [clauses]}
+  \end{itemize}
+  \vspace{-0.5cm}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{Fortran}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=127,lastline=136]{src/tmp.f90}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{C/C++}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=61,lastline=71]{src/tmp.c}
+    \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile,c]{OpenACC Loop Directive}
+  \begin{itemize}
+  \item Loops are the most likely targets for Parallelizing.
+  \item The Loop directive is used within a parallel or kernels directive identifying a loop that can be executed on the accelerator device.
+  \item[C:] \Verbred{\#pragma acc loop [clauses]}
+  \item[Fortran:] \Verbred{!\$acc loop [clauses]}
+  \item The loop directive can be combined with the enclosing parallel or kernels
+  \item[C:] \Verbred{\#pragma acc kernels loop [clauses]}
+  \item[Fortran:] \Verbred{!\$acc parallel loop [clauses]}
+  \item The loop directive clauses can be used to optimize the code. This however requires knowledge of the accelerator device.
+  \item[Clauses:] gang, worker, vector, num\_gangs, num\_workers
+  \end{itemize}
+  \vspace{-0.5cm}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{Fortran}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=139,lastline=143]{src/tmp.f90}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{C/C++}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=72,lastline=75]{src/tmp.c}
+    \end{exampleblock}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{ OpenACC parallel vs. kernels}
+  \begin{columns}
+    \column{0.4\textwidth}
+    \begin{block}{PARALLEL}
+      \begin{itemize}
+        \item Requires analysis by programmer to ensure safe parallelism.
+        \item Straightforward path from OpenMP
+      \end{itemize}
+    \end{block}
+    \column{0.4\textwidth}
+    \begin{block}{KERNELS}
+      \begin{itemize}
+        \item Compiler performs parallel analysis and parallelizes what it believes is safe.
+        \item Can cover larger area of code with single directive
+        \item Gives compiler additional leeway
+      \end{itemize}
+    \end{block}
+  \end{columns}
+  \begin{itemize}
+    \item[] Both approaches are equally valid and can perform equally well.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exercise}
+  \begin{itemize}
+    \item Parallelize the saxpy code by adding OpenACC directives - parallel or kernels
+    \item Compile the code using the following flags to the NVIDIA HPC SDK compiler
+    \item[] \lstinline[basicstyle=\normalsize\ttfamily]|-acc -gpu|
+    \item Run the code and compare timing with serial and openmp code
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SAXPY: Serial}
+  \begin{exampleblock}{Serial Code}
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy.f90} 
+  \end{exampleblock}
+\end{frame}
+\begin{frame}[fragile]{SAXPY: OpenMP}
+  \vspace{-0.5cm}
+  \begin{exampleblock}{OpenMP Code}
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_omp.f90} 
+  \end{exampleblock}
+\end{frame}
+\begin{frame}[fragile]{SAXPY: OpenACC}
+  \vspace{-0.5cm}
+  \begin{exampleblock}{OpenACC Code}
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_acc-nodata.f90} 
+  \end{exampleblock}
+\end{frame}
+\begin{frame}[fragile]{SAXPY: CUDA Fortran}
+  \vspace{-0.5cm}
+  \begin{exampleblock}{CUDA Fortran Code}
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_cuda.f90} 
+  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile,allowframebreaks]{SAXPY: Compile \& Run}
+  \vspace{-0.5cm}
+  \begin{exampleblock}{Compile}
+    \begin{lstlisting}[basicstyle=\fontsize{6}{8}\selectfont\ttfamily]
+[alp514.sol](1018): nvc -acc -gpu -o saxpyc_acc saxpy_acc.c
+    \end{lstlisting}
+    \begin{itemize}
+      \item Specify the gpu architecture: \lstinline[basicstyle=\small\ttfamily]|-gpu=cc75| 
+      \item Get more information about the compilation: \lstinline[basicstyle=\small\ttfamily]|-Minfo=accel|
+    \end{itemize}
+    \begin{lstlisting}[basicstyle=\fontsize{6}{8}\selectfont\ttfamily]
+[alp514.hawk-b625](1005): nvfortran -acc -gpu=cc75 -Minfo=accel -o saxpyf_acc saxpy_acc.f90
+saxpy:
+     12, Generating Tesla code
+         13, !$acc loop vector(128) ! threadidx%x
+     12, Generating implicit copyout(x(1:200000000)) [if not already present]
+     13, Loop is parallelizable
+     15, Generating Tesla code
+         16, !$acc loop vector(128) ! threadidx%x
+     15, Generating implicit copyout(y(1:200000000)) [if not already present]
+     16, Loop is parallelizable
+     20, Generating Tesla code
+         21, !$acc loop gang, vector(128) ! blockidx%x threadidx%x
+     20, Generating implicit copy(y(1:200000000)) [if not already present]
+         Generating implicit copyin(x(1:200000000)) [if not already present]
+    \end{lstlisting}
+  \end{exampleblock}
+  \framebreak
+  \begin{exampleblock}{Fortran Timings}
+    {\scriptsize
+    \begin{center}
+      \begin{tabular}{|bbbb|}
+        \hline
+        \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
+        \hline
+         Serial & Xeon Gold 6230R & 0.504534 & \\
+         \hline
+         OpenMP (12 threads) & Xeon Gold 6230R & 0.050300 & 10.03 \\
+         OpenMP (24 threads) & Xeon Gold 6230R & 0.026623 & 18.95 \\
+         OpenMP (48 threads) & Xeon Gold 6230R & 0.025263 & 19.97 \\
+         \hline
+         OpenACC & Tesla T4 & 0.517426 & 0.98  \\ % 0.009601 52.55
+         \hline
+         CUDA & Tesla T4 & 0.007846 & 64.30 \\
+%        Serial & Xeon E5-2650 v3 & 0.456777 & \\
+%        & Xeon E5-2670 v3 & 0.451826 & \\
+%        \hline
+%        OpenMP (20 threads) & Xeon E5-2650 v3 & 0.111399 & 4.100 \\
+%        OpenMP (24 threads) & Xeon E5-2670 v3 & 0.103316 & 4.373 \\
+%        \hline
+%        OpenACC & Tesla K80 & 0.039771 & 11.775 \\
+%        & GTX 1080 & 0.025179 & 18.260 \\
+%        \hline
+%        CUDA & Tesla K80 &  0.026980 & 17.357 \\
+%        & GTX 1080 & 0.019904 & 23.099 \\
+        \hline
+      \end{tabular}
+    \end{center}
+    }
+  \end{exampleblock}
+  \begin{exampleblock}{C Timings}
+    {\scriptsize
+    \begin{center}
+      \begin{tabular}{|bbbb|}
+        \hline
+        \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
+        \hline
+         Serial & Xeon Gold 6230R & 0.512128 & \\
+         \hline
+         OpenMP (12 threads) & Xeon Gold 6230R & 0.056454 &  9.07 \\
+         OpenMP (24 threads) & Xeon Gold 6230R & 0.048442 & 10.57 \\
+         OpenMP (48 threads) & Xeon Gold 6230R & 0.026348 & 19.44 \\
+         \hline
+         OpenACC & Tesla T4 & 3.434997 & 0.15 \\ % 0.019029 26.91
+         \hline
+         CUDA & Tesla T4 & 0.000008 & 64016 \\
+        \hline
+      \end{tabular}
+    \end{center}
+    }
+  \end{exampleblock}
+  What's going with OpenACC code? \\
+  Why even bother with OpenACC if performance is so bad?
+ \end{frame}
+
+
+\begin{frame}[fragile]{Analyzing OpenACC Run Time}
+  \begin{itemize}
+    \item The NVIDIA HPC SDK compiler provides automatic instrumentation when {\color{orange}NV\_ACC\_TIME=1} at runtime
+  \end{itemize}
+  \begin{block}{}
+    \begin{columns}[t]
+      \column{0.4\textwidth}
+    \begin{Verbatim}[fontsize=\fontsize{3.5}{4.5}\selectfont,commandchars=\\\{\}]
+[alp514.hawk-b624](1002): NV_ACC_TIME=1 ./saxpyf_acc-nodata
+SAXPY Time: 0.778822
+
+Accelerator Kernel Timing data
+/home/alp514/Workshop/2021HPC/parprog/solution/saxpy/saxpy_acc-nodata.f90
+  saxpy  NVIDIA  devicenum=0
+    time(us): 639,595
+    11: compute region reached 1 time
+        11: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total={\textcolor{DarkGreen}{7,824}} max=7,824 min=7,824 avg=7,824
+            elapsed time(us): total={\textcolor{DarkGreen}{7,872}} max=7,872 min=7,872 avg=7,872
+    11: data region reached 2 times
+        16: data copyout transfers: 96
+             device time(us): total={\textcolor{red}{243,594}} max=2,558 min=1,751 avg=2,537
+    20: compute region reached 1 time
+        20: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total={\textcolor{DarkGreen}{9,556}} max=9,556 min=9,556 avg=9,556
+            elapsed time(us): total={\textcolor{DarkGreen}{9,605}} max=9,605 min=9,605 avg=9,605
+    20: data region reached 2 times
+        20: data copyin transfers: 96
+             device time(us): total={\textcolor{red}{256,886}} max=2,709 min=1,841 avg=2,675
+        24: data copyout transfers: 48
+             device time(us): total={\textcolor{red}{121,735}} max=2,556 min=1,752 avg=2,536
+    \end{Verbatim}
+    \column{0.4\textwidth}
+    \begin{Verbatim}[fontsize=\fontsize{3.5}{4.5}\selectfont,commandchars=\\\{\}]
+[alp514.hawk-b624](1003): NV_ACC_TIME=1 ./saxpyc_acc-nodata
+SAXPY Time: 3.984324
+
+Accelerator Kernel Timing data
+/home/alp514/Workshop/2021HPC/parprog/solution/saxpy/saxpy_acc-nodata.c
+  main  NVIDIA  devicenum=0
+    time(us): 1,277,749
+    16: compute region reached 1 time
+        16: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total={\textcolor{DarkGreen}{14,513}} max=14,513 min=14,513 avg=14,513
+            elapsed time(us): total={\textcolor{DarkGreen}{14,561}} max=14,561 min=14,561 avg=14,561
+    16: data region reached 2 times
+        19: data copyout transfers: 192
+             device time(us): total={\textcolor{red}{487,132}} max=2,559 min=946 avg=2,537
+    22: compute region reached 1 time
+        22: kernel launched 1 time
+            grid: [65535]  block: [128]
+             device time(us): total={\textcolor{DarkGreen}{19,484}} max=19,484 min=19,484 avg=19,484
+            elapsed time(us): total={\textcolor{DarkGreen}{19,518}} max=19,518 min=19,518 avg=19,518
+    22: data region reached 2 times
+        22: data copyin transfers: 192
+             device time(us): total={\textcolor{red}{513,260}} max=2,713 min=993 avg=2,673
+        24: data copyout transfers: 96
+             device time(us): total={\textcolor{red}{243,360}} max=2,556 min=944 avg=2,535
+    \end{Verbatim}
+    \end{columns}
+  \end{block}
+  \begin{itemize}
+    \item Fortran: $\sim17\,ms$ for actual calculation and $\sim0.6\,s$ for data transfer
+    \item C: $\sim35\,ms$ for actual calculation and $\sim1.2\,s$ for data transfer
+  \end{itemize}
+\end{frame}
+
+\begin{frame}<0>[fragile]
+  \frametitle{ Building Block of OpenACC}
   \begin{itemize}
   \item Program directives
     \begin{itemize}
@@ -260,7 +505,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\small Clauses}
+\begin{frame}<0>[fragile]{Clauses}
   \begin{itemize}
     \item \Verbred{if (condition)}
     \item \Verbred{async (expression)}
@@ -275,7 +520,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\small Runtime Libraries}
+\begin{frame}<0>[fragile]{Runtime Libraries}
   \begin{itemize}
     \item System setup routines
     \begin{itemize}
@@ -291,7 +536,7 @@
   \end{itemize}
 \end{frame}
 
-%\begin{frame}<0>{\small Environment Variables}
+%\begin{frame}<0>{Environment Variables}
 %  \begin{itemize}
 %    \item OMP\_NUM\_THREADS
 %    \item OMP\_SCHEDULE
@@ -303,140 +548,59 @@
 %  \end{itemize}
 %\end{frame}
 
-\begin{frame}[fragile]{\small OpenACC kernels directive}
-  \begin{columns}
-    \column{0.6\textwidth}
-    \begin{itemize}
-      \item[C:] \Verbred{\#pragma acc kernels [clause]}
-      \item[Fortran] \Verbred{!\$acc kernels [clause]}
-      \item The kernels directive expresses that a region may contain parallelism and the compiler determines what can be safely parallelized.
-      \item The compiler breaks code in the kernel region into a sequence of kernels for execution on the accelerator device.
-      \item For the codes on the right, the compiler identifies 2 parallel loops and generates 2 kernels.
-      \item {\color{red}What is a kernel?} {\color{DarkGreen}A function that runs in parallel on the GPU.}
-      \item When a program encounters a kernels contruct, it will launch a sequence of kernels in order on the device.
-    \end{itemize}
-    \column{0.3\textwidth}
-    \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=98,lastline=107]{src/tmp.f90}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=50,lastline=60]{src/tmp.c}
-    \end{exampleblock}
-  \end{columns}
-\end{frame}
 
-\begin{frame}[fragile]{\small OpenACC Parallel Directive}
-  \begin{columns}
-    \column{0.6\textwidth}
-    \begin{itemize}
-      \item The {\bf parallel} directive identifies a block of code as having parallelism.
-      \item Compiler generates a parallel kernel for that loop.
-      \item[C:] \Verbred{\#pragma acc parallel [clauses]}
-      \item[Fortran:] \Verbred{!\$acc parallel [clauses]}
-    \end{itemize}
-    \column{0.3\textwidth}
-    \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=127,lastline=136]{src/tmp.f90}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=61,lastline=71]{src/tmp.c}
-    \end{exampleblock}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{\small OpenACC Loop Directive}
-  \begin{columns}
-    \column{0.6\textwidth}
-    \begin{itemize}
-      \item Loops are the most likely targets for Parallelizing.
-      \item The Loop directive is used within a parallel or kernels directive identifying a loop that can be executed on the accelerator device.
-      \item[C:] \Verbred{\#pragma acc loop [clauses]}
-      \item[Fortran:] \Verbred{!\$acc loop [clauses]}
-      \item The loop directive can be combined with the enclosing parallel or kernels
-      \item[C:] \Verbred{\#pragma acc kernels loop [clauses]}
-      \item[Fortran:] \Verbred{!\$acc parallel loop [clauses]}
-      \item The loop directive clauses can be used to optimize the code. This however requires knowledge of the accelerator device.
-      \item[Clauses:] gang, worker, vector, num\_gangs, num\_workers
-    \end{itemize}
-    \column{0.3\textwidth}
-    \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=139,lastline=143]{src/tmp.f90}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=72,lastline=75]{src/tmp.c}
-    \end{exampleblock}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{ OpenACC parallel vs. kernels}
-  \begin{columns}
-    \column{0.4\textwidth}
-    \begin{block}{PARALLEL}
-      \begin{itemize}
-        \item Requires analysis by programmer to ensure safe parallelism.
-        \item Straightforward path from OpenMP
-      \end{itemize}
-    \end{block}
-    \column{0.4\textwidth}
-    \begin{block}{KERNELS}
-      \begin{itemize}
-        \item Compiler performs parallel analysis and parallelizes what it believes is safe.
-        \item Can cover larger area of code with single directive.
-      \end{itemize}
-    \end{block}
-  \end{columns}
-  \begin{itemize}
-    \item[] Both approaches are equally valid and can perform equally well.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
+\begin{frame}<0>[fragile]
+  \vspace{0.2cm}
   \begin{columns}[t]
     \column{0.5\textwidth}
+    \begin{block}{Fortran}
     \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/nodataregion/saxpy_acc.f90} 
+    \end{block}
     \column{0.5\textwidth}
+    \begin{block}{C}
     \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/nodataregion/saxpy_acc.c} 
+    \end{block}
   \end{columns}
 \end{frame}
 
-\scriptsize
-\begin{frame}[fragile]
+\begin{frame}<0>[fragile]
   \frametitle{Compilation}
   \begin{itemize}
-    \item C: \Verbindigo{pgcc -acc [-Minfo=accel] [-ta=tesla:cc60 -Mcuda=kepler+] -o saxpyc\_acc saxpy\_acc.c}
+    \item C: \Verbindigo{nvc -acc [-Minfo=accel] [-gpu=cc75] -o saxpyc\_acc saxpy\_acc.c}
     \item Fortran 90:
-    \Verbindigo{pgf90 -acc [-Minfo=accel] [-ta=tesla:cc60 -Mcuda=kepler+] -o saxpyf\_acc saxpy\_acc.f90}
+    \Verbindigo{nvfortran -acc [-Minfo=accel] [-gpu=cc75] -o saxpyf\_acc saxpy\_acc.f90}
   \end{itemize}
   \begin{block}{}
     {\fontsize{4}{5}\selectfont
       \begin{Verbatim}
-[alp514.sol-b501](1006): pgcc -acc -ta=tesla:cc60 -Mcuda=kepler+ -Minfo=accel -o saxpyc_acc saxpy_acc.c
+[alp514.hawk-b624](1002): nvc -acc -gpu=cc75 -Minfo=accel  -o saxpyc_acc saxpy_acc.c
 main:
-     20, Generating implicit copyout(x[:500000000],y[:500000000])
-     21, Loop is parallelizable
-         Accelerator kernel generated
+     15, Generating copyin(a) [if not already present]
+         Generating create(y[:],x[:]) [if not already present]
+     17, Loop is parallelizable
          Generating Tesla code
-         21, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     28, Generating implicit copyin(x[:500000000])
-         Generating implicit copy(y[:500000000])
-     29, Loop is parallelizable
-         Accelerator kernel generated
+         17, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+     25, Loop is parallelizable
          Generating Tesla code
-         29, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-[alp514.sol-b501](1007): pgfortran -acc -ta=tesla:cc60 -Mcuda=kepler+ -Minfo=accel -o saxpyf_acc saxpy_acc.f90
+         25, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+[alp514.hawk-b624](1003): nvfortran -acc -gpu=cc75 -Minfo=accel  -o saxpyf_acc saxpy_acc.f90
 saxpy:
-     17, Generating implicit copyout(x(:),y(:))
-         Accelerator kernel generated
-         Generating Tesla code
-         18, !$acc loop vector(128) ! threadidx%x
-     18, Loop is parallelizable
-     20, Accelerator kernel generated
-         Generating Tesla code
-     26, Generating implicit copyin(x(:))
-         Generating implicit copy(y(:))
-         Accelerator kernel generated
-         Generating Tesla code
-         27, !$acc loop gang, vector(128) ! blockidx%x threadidx%x
+     10, Generating copyin(a) [if not already present]
+         Generating create(y(:),x(:)) [if not already present]
+     11, Generating Tesla code
+         12, !$acc loop vector(128) ! threadidx%x
+     12, Loop is parallelizable
+     14, Generating Tesla code
+         15, !$acc loop vector(128) ! threadidx%x
+     15, Loop is parallelizable
+     20, Generating Tesla code
+         21, !$acc loop gang, vector(128) ! blockidx%x threadidx%x
       \end{Verbatim}
     }
   \end{block}
 \end{frame}
 
-\begin{frame}{Run OpenACC Code}
+\begin{frame}<0>{Run OpenACC Code}
   \begin{columns}
     \column{0.8\textwidth}
     \begin{exampleblock}{}
@@ -460,82 +624,17 @@ saxpy:
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Analyzing OpenACC Run Time}
-  \begin{itemize}
-    \item The PGI compiler provides automatic instrumentation when {\color{orange}PGI\_ACC\_TIME=1} at runtime
-  \end{itemize}
-  \begin{block}{}
-    \begin{columns}[t]
-      \column{0.45\textwidth}
-    \begin{Verbatim}[fontsize=\fontsize{3.5}{4.5}\selectfont,commandchars=\\\{\}]
-[alp514.sol-b501](1008): PGI_ACC_TIME=1 ./saxpyc_acc
-SAXPY Time: 2.423356
-
-Accelerator Kernel Timing data
-/home/alp514/sum2017/saxpy/nodataregion/saxpy_acc.c
-  main  NVIDIA  devicenum=0
-    time(us): 4,987,729
-    14: compute region reached 1 time
-        15: kernel launched 1 time
-            grid: [65535]  block: [128]
-             device time(us): total={\textcolor{red}{\bf 30,948}} max=30,948 min=30,948 avg=30,948
-            elapsed time(us): total={\textcolor{red}{\bf 31,012}} max=31,012 min=31,012 avg=31,012
-    14: data region reached 2 times
-        20: data copyout transfers: 478
-             device time(us): total={\textcolor{red}{\bf 3,454,420}} max=7,790 min=3,324 avg=7,226
-    22: compute region reached 1 time
-        23: kernel launched 1 time
-            grid: [65535]  block: [128]
-             device time(us): total={\textcolor{red}{\bf 50,330}} max=50,330 min=50,330 avg=50,330
-            elapsed time(us): total={\textcolor{red}{\bf 50,392}} max=50,392 min=50,392 avg=50,392
-    22: data region reached 2 times
-        22: data copyin transfers: 478
-             device time(us): total={\textcolor{red}{\bf 661,261}} max=1,594 min=573 avg=1,383
-        26: data copyout transfers: 239
-             device time(us): total={\textcolor{red}{\bf 790,770}} max=3,809 min=1,327 avg=3,308
-    \end{Verbatim}
-    \column{0.45\textwidth}
-    \begin{Verbatim}[fontsize=\fontsize{3.5}{4.5}\selectfont,commandchars=\\\{\}]
-[alp514.sol-b501](1063): PGI_ACC_TIME=1 ./saxpyf_acc
-SAXPY Time: 2.397494
-
-Accelerator Kernel Timing data
-/share/ceph/hpc2017/alp514/sum2017/openmp_acc/saxpy/nodataregion/saxpy_acc.f90
-  saxpy  NVIDIA  devicenum=0
-    time(us): 5,063,174
-    17: compute region reached 1 time
-        17: kernel launched 1 time
-            grid: [1]  block: [128]
-             device time(us): total={\textcolor{red}{\bf 154,492}} max=154,492 min=154,492 avg=154,492
-            elapsed time(us): total={\textcolor{red}{\bf 154,570}} max=154,570 min=154,570 avg=154,570
-    17: data region reached 2 times
-        19: data copyout transfers: 478
-             device time(us): total={\textcolor{red}{\bf 3,428,252}} max=13,008 min=2,909 avg=7,172
-    20: compute region reached 1 time
-        20: kernel launched 1 time
-            grid: [1]  block: [1]
-             device time(us): total={\textcolor{red}{\bf 2}} max=2 min=2 avg=2
-            elapsed time(us): total={\textcolor{red}{\bf 53}} max=53 min=53 avg=53
-    26: compute region reached 1 time
-        26: kernel launched 1 time
-            grid: [65535]  block: [128]
-             device time(us): total={\textcolor{red}{\bf 50,350}} max=50,350 min=50,350 avg=50,350
-            elapsed time(us): total={\textcolor{red}{\bf 50,402}} max=50,402 min=50,402 avg=50,402
-    26: data region reached 2 times
-        26: data copyin transfers: 478
-             device time(us): total={\textcolor{red}{\bf 658,588}} max=1,536 min=577 avg=1,377
-        30: data copyout transfers: 239
-             device time(us): total={\textcolor{red}{\bf 771,490}} max=3,637 min=1,393 avg=3,227
-    \end{Verbatim}
-    \end{columns}
-  \end{block}
+\begin{frame}{Processing Flow}
+  \only<1>{\includegraphics[width=\textwidth]{./kernel_h-d}}
+  \only<2>{\includegraphics[width=\textwidth]{./kernel_offload}}
+  \only<3>{\includegraphics[width=\textwidth]{./kernel_d-h}}
 \end{frame}
 
-\begin{frame}{ Offloading a Parallel Kernel}
+\begin{frame}<0>{ Offloading a Parallel Kernel}
   \include{kernel}
 \end{frame}
 
-\begin{frame}[fragile]{\small Defining data regions}
+\begin{frame}[fragile]{Defining data regions}
   \begin{itemize}
     \item The data construct defines a region of code in which GPU arrays remain on the GPU and are shared among all kernels in that region
   \end{itemize}
@@ -544,7 +643,7 @@ Accelerator Kernel Timing data
   \begin{exampleblock}{}
     \begin{columns}[c]
       \column{3.5cm}
-      \begin{lstlisting}[basicstyle=\tiny\ttfamily,language=OmpFortran]
+      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpFortran]
 !$acc data [clause]
     !$acc parallel loop
        ...
@@ -553,7 +652,7 @@ Accelerator Kernel Timing data
 !$acc end data
       \end{lstlisting}
       \column{0.5cm}
-      \fontsize{55}{20}\selectfont{\color{lubrown}\}}
+      \fontsize{85}{20}\selectfont{\color{lubrown}\}}
       \column{3cm}
       Arrays used within the data region will remain on the GPU until the end of the data region.
     \end{columns}
@@ -574,7 +673,7 @@ Accelerator Kernel Timing data
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\small Array Shaping}
+\begin{frame}[fragile]{Array Shaping}
   \begin{itemize}
     \item Compiler sometime cannot determine size of arrays
     \begin{itemize}
@@ -586,7 +685,62 @@ Accelerator Kernel Timing data
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{\small Update Construct}
+\begin{frame}[c]{Exercise}
+  \begin{itemize}
+    \item Modify the SAXPY code to add a structured data region at the appropriate spot
+    \item How does the compiler output the change?
+    \item Is the code faster now? 
+    \item By how much and how does it compare with the serial and openmp code?
+    \item Reprofile the code using NV\_ACC\_TIME
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Timings}
+  \begin{exampleblock}{Fortran Timings}
+    {\scriptsize
+    \begin{center}
+      \begin{tabular}{|bbbb|}
+        \hline
+        \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
+        \hline
+         Serial & Xeon Gold 6230R & 0.504534 & \\
+         \hline
+         OpenMP (12 threads) & Xeon Gold 6230R & 0.050300 & 10.03 \\
+         OpenMP (24 threads) & Xeon Gold 6230R & 0.026623 & 18.95 \\
+         OpenMP (48 threads) & Xeon Gold 6230R & 0.025263 & 19.97 \\
+         \hline
+         OpenACC & Tesla T4 & 0.009601 & 52.55 \\
+         \hline
+         CUDA & Tesla T4 & 0.007846 & 64.30 \\
+        \hline
+      \end{tabular}
+    \end{center}
+    }
+  \end{exampleblock}
+  \begin{exampleblock}{C Timings}
+    {\scriptsize
+    \begin{center}
+      \begin{tabular}{|bbbb|}
+        \hline
+        \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
+        \hline
+         Serial & Xeon Gold 6230R & 0.512128 & \\
+         \hline
+         OpenMP (12 threads) & Xeon Gold 6230R & 0.056454 &  9.07 \\
+         OpenMP (24 threads) & Xeon Gold 6230R & 0.048442 & 10.57 \\
+         OpenMP (48 threads) & Xeon Gold 6230R & 0.026348 & 19.44 \\
+         \hline
+         OpenACC & Tesla T4 & 0.019029 & 26.91 \\
+         \hline
+         CUDA & Tesla T4 & 0.000008 & 64016 \\
+        \hline
+      \end{tabular}
+    \end{center}
+    }
+  \end{exampleblock}
+ \end{frame}
+
+\begin{frame}[fragile]{Update Construct}
   \begin{itemize}
     \item Used to update existing data after it has changed in its corresponding copy (e.g. upate device copy after host copy changes).
     \item Move data from GPU to host, or host to GPU.
@@ -644,47 +798,76 @@ Accelerator Kernel Timing data
   \end{columns}
 \end{frame}
 
-\begin{frame}{ Exercise: Matrix Multiplication}
-  \begin{columns}
-    \column{0.7\textwidth}
-    \begin{exampleblock}{C}
-      \begin{tabular}{|b|b|b|b|}
-        \hline
-        \rowcolor{lublue}Execution & Time & SpeedUp & GFlops/s \\
-        \hline
-        Serial & 8.231 &  & 0.729 \\
-        OpenMP (12 Threads) & 0.619 & 13.297 & 9.689 \\
-        OpenMP (24 Threads) & 0.342 & 24.067 & 17.557 \\
-        OpenACC & 0.031 & 265.516 & 195.733 \\
-        \hline
-      \end{tabular}
-    \end{exampleblock}
-    \begin{exampleblock}{Fortran}
-      \begin{tabular}{|b|b|b|b|}
-        \hline
-        \rowcolor{lublue}Execution & Time & SpeedUp & GFlops/s \\
-        \hline
-        Serial & 8.456 & & 0.710 \\
-        OpenMP (12 Threads) & 0.752 & 11.245 & 7.979 \\
-        OpenMP (24 Threads) & 0.468 & 18.068  & 12.821 \\
-        OpenACC & 0.102 & 82.902 & 58.824 \\
-        \hline
-      \end{tabular}
-    \end{exampleblock}
-  \end{columns}
+%\begin{frame}{ Exercise: Matrix Multiplication}
 %  \begin{columns}
-%    \column{0.5\textwidth}
-%    \begin{eblock}{}
-%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_acc.f90}
-%    \end{eblock}
-%    \column{0.5\textwidth}
-%    \begin{eblock}{}
-%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_acc.c}
-%    \end{eblock}
+%    \column{0.7\textwidth}
+%    \begin{exampleblock}{C}
+%      \begin{tabular}{|b|b|b|b|}
+%        \hline
+%        \rowcolor{lublue}Execution & Time & SpeedUp & GFlops/s \\
+%        \hline
+%        Serial & 8.231 &  & 0.729 \\
+%        OpenMP (12 Threads) & 0.619 & 13.297 & 9.689 \\
+%        OpenMP (24 Threads) & 0.342 & 24.067 & 17.557 \\
+%        OpenACC & 0.031 & 265.516 & 195.733 \\
+%        \hline
+%      \end{tabular}
+%    \end{exampleblock}
+%    \begin{exampleblock}{Fortran}
+%      \begin{tabular}{|b|b|b|b|}
+%        \hline
+%        \rowcolor{lublue}Execution & Time & SpeedUp & GFlops/s \\
+%        \hline
+%        Serial & 8.456 & & 0.710 \\
+%        OpenMP (12 Threads) & 0.752 & 11.245 & 7.979 \\
+%        OpenMP (24 Threads) & 0.468 & 18.068  & 12.821 \\
+%        OpenACC & 0.102 & 82.902 & 58.824 \\
+%        \hline
+%      \end{tabular}
+%    \end{exampleblock}
 %  \end{columns}
+
+
+%\end{frame}
+
+\begin{frame}[fragile]{OpenACC private Clause}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{block}{}
+      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+#pragma acc parallel loop
+  for(int i=0;i<M;i++) {
+    for(int jj=0;jj<10;jj++)
+      tmp[jj]=jj;
+    int sum=0;
+    for(int jj=0;jj<N;jj++)
+      sum+=tmp[jj];
+    A[i]=sum;
+  }
+      \end{lstlisting}
+    \end{block}
+    \column{0.45\textwidth}
+    \begin{block}{}
+      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+#pragma acc parallel loop private(tmp[0:9])
+  for(int i=0;i<M;i++) {
+    for(int jj=0;jj<10;jj++)
+      tmp[jj]=jj;
+    int sum=0;
+    for(int jj=0;jj<N;jj++)
+      sum+=tmp[jj];
+    A[i]=sum;
+  }
+      \end{lstlisting}
+    \end{block}
+  \end{columns}
+  \begin{itemize}
+    \item Compiler cannot parallelize because tmp is shared across threads
+    \item Also useful for live-out scalars
+  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,allowframebreaks]{\small Reduction}
+\begin{frame}[fragile,allowframebreaks]{OpenACC reduction Clause}
   \begin{itemize}
     \item Reduction clause is allowed on \textit{parallel} and \textit{loop} constructs
   \end{itemize}
@@ -703,32 +886,71 @@ Accelerator Kernel Timing data
     \end{lstlisting}
   \end{exampleblock}
 
-  \begin{exampleblock}{}
-    \begin{center}
-      \begin{tabular}{|b|b|b|}
-        \hline
-        \rowcolor{lublue}\multicolumn{3}{|c|}{Fortran}\\
-        \hline
-        \rowcolor{lublue}Execution & Time & SpeedUp \\
-        \hline
-        Serial & 4.581209 &  \\
-        OpenMP (12 Threads) & 0.490 & 9.349 \\
-        OpenMP (24 Threads) & 0.272 & 16.843 \\
-        OpenACC & 1.230 & 3.725 \\
-        \hline
-        \rowcolor{lublue}\multicolumn{3}{|c|}{C}\\
-        \hline
-        \rowcolor{lublue}Execution & Time & SpeedUp \\
-        \hline
-        Serial & 12.9423 &  \\
-        OpenMP (12 Threads) & 1.29825 & 9.969 \\
-        OpenMP (24 Threads) & 0.67275 & 19.238 \\
-        OpenACC & 1.09468  & 11.823 \\
-        \hline
-        
-      \end{tabular}
-    \end{center}
-  \end{exampleblock}
+%  \begin{exampleblock}{}
+%    \begin{center}
+%      \begin{tabular}{|b|b|b|}
+%        \hline
+%        \rowcolor{lublue}\multicolumn{3}{|c|}{Fortran}\\
+%        \hline
+%        \rowcolor{lublue}Execution & Time & SpeedUp \\
+%        \hline
+%        Serial & 4.581209 &  \\
+%        OpenMP (12 Threads) & 0.490 & 9.349 \\
+%        OpenMP (24 Threads) & 0.272 & 16.843 \\
+%        OpenACC & 1.230 & 3.725 \\
+%        \hline
+%        \rowcolor{lublue}\multicolumn{3}{|c|}{C}\\
+%        \hline
+%        \rowcolor{lublue}Execution & Time & SpeedUp \\
+%        \hline
+%        Serial & 12.9423 &  \\
+%        OpenMP (12 Threads) & 1.29825 & 9.969 \\
+%        OpenMP (24 Threads) & 0.67275 & 19.238 \\
+%        OpenACC & 1.09468  & 11.823 \\
+%        \hline 
+%      \end{tabular}
+%    \end{center}
+%  \end{exampleblock}
+\end{frame}
+
+\begin{frame}[c]{Nested Loops}
+  \begin{itemize}
+    \item Currently we have only exposed parallelism on the outer loop
+    \item We know that both loops can be parallelized
+    \item Let’s look at methods for parallelizing multiple loops
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{OpenACC collapse Clause}
+  \begin{itemize}
+  \item[] \textbf{\textcolor{lubrown}{collapse(n)}}: Applies the associated directive to the following ntightly nested loops.
+  \end{itemize}
+  \begin{columns}
+    \column{9cm}
+    \begin{exampleblock}{}
+      \begin{columns}[c]
+        \column{3.5cm}
+        \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+#pragma acc parallel 
+#pragma acc loop collapse(2)
+for(int i=0; i<N; i++)
+  for(int j=0; j<N; j++)
+    ...
+        \end{lstlisting}
+        \column{0.5cm}
+        \fontsize{85}{20}\selectfont{\color{lubrown}\}}
+        \column{3.5cm}
+        \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+#pragma acc parallel 
+#pragma acc loop 
+for(int ij=0; ij<N*N; ij++)
+...
+        \end{lstlisting}
+      \end{columns}
+    \end{exampleblock}
+  \end{columns}
+  \vspace{0.25cm}
+ Loops must be tightly nested
 \end{frame}
 
 \begin{frame}{ Further Speedups}
@@ -775,7 +997,7 @@ Accelerator Kernel Timing data
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Acknowledgements}
   \begin{itemize}
     \item[] Lecture derived from slides and presentations by
     \item Michael Wolfe, PGI
@@ -786,7 +1008,30 @@ Accelerator Kernel Timing data
 \end{frame}
 
 \setcounter{algorithm}{0}
-\begin{frame}[allowframebreaks]{Exercise 1: Calculate pi by Numerical Integration}
+
+\begin{frame}{Exercise 1: SAXPY}
+  \begin{itemize}
+    \item SAXPY is a common operation in computations with vector processors included as part of the BLAS routines
+    \item[] $y\leftarrow \alpha x + y$
+%    \item SAXPY is a combination of scalar multiplication and vector addition
+    \item Write a SAXPY code to multiply a vector with a scalar.
+  \end{itemize}
+  \begin{algorithm}[H]
+    \caption{Pseudo Code for SAXPY}
+    \begin{algorithmic}
+      \Program{saxpy}{}
+      \State $n \gets$ some large number
+      \State $x(1:n) \gets$ some number say, 1
+      \State $y(1:n) \gets$ some other number say, 2
+      \State $a \gets$ some other number ,say, 3
+      \Do{$i \gets 1\cdots n$}
+      \State $y_i \gets y_i + a * x_i$
+      \EndDo
+      \EndProgram{saxpy}
+    \end{algorithmic}
+  \end{algorithm}
+\end{frame}
+\begin{frame}[allowframebreaks]{Exercise 2: Calculate pi by Numerical Integration}
   \begin{columns}
     \column{5cm}
     \begin{itemize}
@@ -819,29 +1064,17 @@ Accelerator Kernel Timing data
         \EndFunction
     \end{algorithmic}
   \end{algorithm}
-\end{frame}
-
-\begin{frame}{Exercise 2: SAXPY}
-  \begin{itemize}
-    \item SAXPY is a common operation in computations with vector processors included as part of the BLAS routines
-    \item[] $y\leftarrow \alpha x + y$
-%    \item SAXPY is a combination of scalar multiplication and vector addition
-    \item Write a SAXPY code to multiply a vector with a scalar.
-  \end{itemize}
-  \begin{algorithm}[H]
-    \caption{Pseudo Code for SAXPY}
-    \begin{algorithmic}
-      \Program{saxpy}{}
-      \State $n \gets$ some large number
-      \State $x(1:n) \gets$ some number say, 1
-      \State $y(1:n) \gets$ some other number say, 2
-      \State $a \gets$ some other number ,say, 3
-      \Do{$i \gets 1\cdots n$}
-      \State $y_i \gets y_i + a * x_i$
-      \EndDo
-      \EndProgram{saxpy}
-    \end{algorithmic}
-  \end{algorithm}
+  \framebreak
+  \begin{columns}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/calc_pi/solution/pi_acc.f90}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \begin{exampleblock}{}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/calc_pi/solution/pi_acc.c}
+    \end{exampleblock}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[allowframebreaks]{Exercise 3: Matrix Multiplication}
@@ -870,6 +1103,22 @@ Accelerator Kernel Timing data
       \EndProgram{matmul}
     \end{algorithmic}
   \end{algorithm}
+  \framebreak
+  \begin{columns}
+    \column{0.44\textwidth}
+    \vspace{-1cm}
+    \begin{exampleblock}{}
+      \vspace{-0.25cm}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_acc.f90}
+    \end{exampleblock}
+    \column{0.44\textwidth}
+    \vspace{-1cm}
+    \begin{exampleblock}{}
+      \vspace{-0.25cm}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_acc.c}
+    \end{exampleblock}
+  \end{columns}
+
 \end{frame}
 \end{document}
 

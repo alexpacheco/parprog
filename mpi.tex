@@ -1,13 +1,34 @@
 \documentclass[10pt,t]{beamer} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\fontfamily{ppl}\selectfont
+
+\usepackage{fontspec} 
+\defaultfontfeatures{Mapping=tex-text} 
+\setsansfont[Ligatures={Common}]{Futura}
+\setmonofont[Scale=0.8]{Monaco} 
+
 
 \input{mypreamble}
 
-\title{Introduction to MPI}
-\subtitle{2017~HPC~Workshop:~Parallel~Programming}
+\title[MPI]{Introduction to MPI}
+\subtitle{2021~HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
-\institute{\href{http://researchcomputing.lehigh.edu}{LTS Research Computing}}
-\date{May~31~-~June~1,~2017}
+\institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
+\date{July~13~-~15,~2021}
     
+\AtBeginSection[]
+{
+  \begingroup
+%  \setbeamertemplate{background canvas}[vertical shading][bottom=lubrown,top=lubrown]
+%  \setbeamertemplate{footline}[myfootline] 
+%  \setbeamertemplate{section page}[mysection]
+  \frame[c]{
+%    \sectionpage
+    \tableofcontents[currentsection,currentsubsection]
+  }
+  \endgroup
+}
 
 \begin{document}
 
@@ -16,6 +37,7 @@
 \end{frame}
 
 \scriptsize
+\section{Introduction}
 \begin{frame}
   \frametitle{Distributed Memory Model}
 %  \begin{columns}
@@ -161,15 +183,25 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Various MPI Implementations}
+  \frametitle{MPI Implementations}
   \begin{itemize}
-    \item OpenMPI: open source, portability and simple installation and config
-    \item MPICH: open source, portable
-    \item MVAPICH2: MPICH derivative - InfiniBand, iWARP and other RDMA-enabled interconnects (GPUs)
-      \begin{itemize}
-        \item MPI implementation on Sol
-      \end{itemize}
-    \item Intel MPI (IMPI): vendor-supported MPICH from Intel
+    \item There are two different types of MPI implementations commonly used. 
+    \begin{enumerate}
+       \item {\bf MPICH}: Developed by Argonne National Laboratory.
+       \begin{itemize}
+           \item used as a starting point for various commercial and open source MPI libraries
+           \item {\bf MVAPICH2}: Developed by D. K. Panda with support for  InfiniBand, iWARP, RoCE, and Intel Omni-Path. (default MPI on Sol),
+           \item {\bf Intel MPI}: Intel's version of MPI. Part of Intel OneAPI HPC Toolkit
+           \item {\bf IBM MPI}:  for IBM BlueGene, and 
+           \item {\bf CRAY MPI}: for Cray systems.
+       \end{itemize}
+       \item {\bf OpenMPI}: A Free, Open Source implementation from merger of three well know MPI implementations. Can be used for commodity network as well as high speed network.
+       \begin{itemize}
+           \item {\bf FT-MPI} from the University of Tennessee,
+           \item {\bf LA-MPI}: from Los Alamos National Laboratory,
+           \item {\bf LAM/MPI}: from Indiana University
+       \end{itemize}
+    \end{enumerate}
   \end{itemize}
 \end{frame}
 
@@ -178,17 +210,20 @@
   \begin{itemize}
     \item There is no MPI compiler available to compile programs nor is there is a compiler flag.
     \item Instead, you need to build the MPI scripts for a particular compiler.
-    \item On Sol, we have build MVAPICH2 version 2.1 using GCC 5.3 and  6.1, Intel 2016 and PGI 2016, and version 2.2 using GCC 7.1 and Intel 2017
+    \item You can use MVAPICH2 and MPICH on Sol
+    \item You should use MPICH only on Hawk. 
     \item Each of these builds provide mpicc, mpicxx and mpif90 for compiling C, C++ and Fortran codes respectively that are wrapper for the underlying compilers
   \end{itemize}
   \begin{lstlisting}[basicstyle=\tiny\ttfamily]
-[alp514.sol](793): module load mvapich2/2.2/intel-17.0.3
+[alp514.sol](793): module load mvapich2
 [alp514.sol](794): mpicc -show
-icc -fPIC -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -L/share/Apps/mvapich2/2.2/intel-17.0.3/lib -Wl,-rpath -Wl,/share/Apps/mvapich2/2.2/intel-17.0.3/lib -Wl,--enable-new-dtags -lmpi
-[alp514.sol](795): mpicxx -show
-icpc -fPIC -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -L/share/Apps/mvapich2/2.2/intel-17.0.3/lib -lmpicxx -Wl,-rpath -Wl,/share/Apps/mvapich2/2.2/intel-17.0.3/lib -Wl,--enable-new-dtags -lmpi
+/share/Apps/intel/2020/compilers_and_libraries_2020.3.275/linux/bin/intel64/icc -lmpi -I/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mvapich2/2.3.4-wguydha/include -L/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mvapich2/2.3.4-wguydha/lib -Wl,-rpath -Wl,/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mvapich2/2.3.4-wguydha/lib
+[alp514.sol](795): module load mpich
+
+Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
+
 [alp514.sol](796): mpif90 -show
-ifort -fPIC -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -L/share/Apps/mvapich2/2.2/intel-17.0.3/lib -lmpifort -Wl,-rpath -Wl,/share/Apps/mvapich2/2.2/intel-17.0.3/lib -Wl,--enable-new-dtags -lmpi
+/share/Apps/intel/2020/compilers_and_libraries_2020.3.275/linux/bin/intel64/ifort -L/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/hwloc/2.2.0-rjrzfy7/lib -I/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mpich/3.3.2-n7f36fo/include -I/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mpich/3.3.2-n7f36fo/include -L/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mpich/3.3.2-n7f36fo/lib -lmpifort -Wl,-rpath -Wl,/share/Apps/lusoft/opt/spack/linux-centos8-haswell/intel-20.0.3/mpich/3.3.2-n7f36fo/lib -lmpi
   \end{lstlisting}
 \end{frame}
 
@@ -215,7 +250,7 @@ ifort -fPIC -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -I/share/Apps/mvapic
     \item Run an application myapp on 72 processors on a total of 3 nodes - node1, node2 and node3 
       \begin{itemize}
         \item mpirun: \lstinline|mpirun -np 72 -f filename myapp|
-        \item mpirun\_rsh: \lstinline|mpirun\_rsh -np 72 -hostfile filename myapp|
+        \item mpirun\_rsh: \lstinline|mpirun_rsh -np 72 -hostfile filename myapp|
         \item mpiexec: \lstinline|mpiexec -n 72 -hosts node1,node2,node3 -ppn 24 myapp|
       \end{itemize}
   \end{itemize}
@@ -225,16 +260,16 @@ ifort -fPIC -I/share/Apps/mvapich2/2.2/intel-17.0.3/include -I/share/Apps/mvapic
   \frametitle{MPI Program Outline}
   \begin{enumerate}
     \item Initiate communication between processes
-      \begin{description}
-        \item[MPI\_INIT:] initialize MPI environment
-        \item[MPI\_COMM\_SIZE]: return total number of MPI processes
-        \item[MPI\_COMM\_RANK]: return rank of calling process
-      \end{description}
+      \begin{itemize}
+        \item {\bf \textcolor{lubrown}{MPI\_INIT}}: initialize MPI environment
+        \item {\bf MPI\_COMM\_SIZE}: return total number of MPI processes
+        \item {\bf MPI\_COMM\_RANK}: return rank of calling process
+      \end{itemize}
       \item Communicate data between processes
-        \begin{description}
-          \item[MPI\_SEND]: send a message
-          \item[MPI\_RECV]: receive a message 
-        \end{description}
+        \begin{itemize}
+          \item {\bf MPI\_SEND}: send a message
+          \item {\bf MPI\_RECV}: receive a message 
+        \end{itemize}
       \item Terminate the MPI environment using \textbf{\textcolor{lubrown}{MPI\_FINALIZE}}
   \end{enumerate}
 \end{frame}
@@ -580,6 +615,27 @@ Task  2: Received from task 1 with tag 1 and from task 3 with tag 2
 Task  2: Send to task 1 with tag 2 and to task 3 with tag 1
     \end{lstlisting}
   \end{exampleblock}
+\end{frame}
+
+\begin{frame}{Further Reading}
+  \begin{itemize}
+    \item Tutorials
+    \begin{enumerate}
+      \item MPI: \url{https://computing.llnl.gov/tutorials/mpi/}
+      \item Advanced MPI: \url{https://hpc.llnl.gov/sites/default/files/DavidCronkSlides.pdf}
+      \item CITutor: \url{https://www.citutor.org/}
+      \item XSEDE HPC Monthly Workshop Series: \url{https://psc.edu/xsede-hpc-series-all-workshops}
+      \item MPI Tutorial: \url{http://mpitutorial.com/}
+    \end{enumerate}
+    \item Books
+    \begin{enumerate}
+      \item Beginning MPI (An Introduction in C) by Wesley Kendall
+      \item Parallel Programming with MPI by Peter Pacheco (No relation)
+      \item Using MPI - 2nd Edition: Portable Parallel Programming with the Message Passing Interface (Scientific and Engineering Computation) by William Gropp
+      \item Parallel Programming in C with MPI and Openmp by Michael J. Quinn
+      \item MPI: The Complete Reference by Marc Snir \textit{et. al.}
+    \end{enumerate}
+  \end{itemize}
 \end{frame}
 
 \end{document}
