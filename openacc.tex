@@ -129,6 +129,7 @@
 \end{frame}
 
 \begin{frame}{What is OpenACC?}
+  \vspace{-0.5cm}
   \begin{exampleblock}{High Level}
     \begin{itemize}
       \item Compiler directives to specify parallel regions in C \& Fortran
@@ -484,145 +485,145 @@ Accelerator Kernel Timing data
   \end{itemize}
 \end{frame}
 
-\begin{frame}<0>[fragile]
-  \frametitle{ Building Block of OpenACC}
-  \begin{itemize}
-  \item Program directives
-    \begin{itemize}
-    \item Syntax
-      \begin{itemize}
-      \item C/C++: \Verbred{\#pragma acc <directive> [clause]}
-      \item Fortran: \Verbred{!\$acc <directive> [clause]}
-      \end{itemize}
-    \item Regions
-    \item Loops
-    \item Synchronization
-    \item Data Structure
-    \item $\cdots$
-    \end{itemize}
-  \item Runtime library routines
-%      \item Environment variables
-  \end{itemize}
-\end{frame}
-
-\begin{frame}<0>[fragile]{Clauses}
-  \begin{itemize}
-    \item \Verbred{if (condition)}
-    \item \Verbred{async (expression)}
-    \item data management clauses
-    \begin{itemize}
-      \item \Verbred{copy($\cdots$),copyin($\cdots$), copyout($\cdots$)}
-      \item \Verbred{create($\cdots$), present($\cdots$)}
-      \item \Verbred{present\_or\_copy\{,in,out\}($\cdots$)} or \Verbred{pcopy\{,in,out\}($\cdots$)}
-      \item \Verbred{present\_or\_create($\cdots$)} or \Verbred{pcreate($\cdots$)}
-    \end{itemize}
-    \item \Verbred{reduction(operator:list)}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}<0>[fragile]{Runtime Libraries}
-  \begin{itemize}
-    \item System setup routines
-    \begin{itemize}
-      \item \Verbred{acc\_init(acc\_device\_nvidia)}
-      \item \Verbred{acc\_set\_device\_type(acc\_device\_nvidia)}
-      \item \Verbred{acc\_set\_device\_num(acc\_device\_nvidia)}
-    \end{itemize}
-    \item Synchronization routines
-    \begin{itemize}
-      \item \Verbred{acc\_async\_wait(int)}
-      \item \Verbred{acc\_async\_wait\_all()}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%\begin{frame}<0>{Environment Variables}
+%\begin{frame}<0>[fragile]
+%  \frametitle{ Building Block of OpenACC}
 %  \begin{itemize}
-%    \item OMP\_NUM\_THREADS
-%    \item OMP\_SCHEDULE
-%    \item OMP\_STACKSIZE
-%    \item OMP\_DYNAMIC
-%    \item OMP\_NESTED
-%    \item OMP\_WAIT\_POLICY
-%    \item more $\cdots$
+%  \item Program directives
+%    \begin{itemize}
+%    \item Syntax
+%      \begin{itemize}
+%      \item C/C++: \Verbred{\#pragma acc <directive> [clause]}
+%      \item Fortran: \Verbred{!\$acc <directive> [clause]}
+%      \end{itemize}
+%    \item Regions
+%    \item Loops
+%    \item Synchronization
+%    \item Data Structure
+%    \item $\cdots$
+%    \end{itemize}
+%  \item Runtime library routines
+%%      \item Environment variables
 %  \end{itemize}
 %\end{frame}
+%
+%\begin{frame}<0>[fragile]{Clauses}
+%  \begin{itemize}
+%    \item \Verbred{if (condition)}
+%    \item \Verbred{async (expression)}
+%%    \item data management clauses
+%    \begin{itemize}
+%      \item \Verbred{copy($\cdots$),copyin($\cdots$), copyout($\cdots$)}
+%      \item \Verbred{create($\cdots$), present($\cdots$)}
+%      \item \Verbred{present\_or\_copy\{,in,out\}($\cdots$)} or \Verbred{pcopy\{,in,out\}($\cdots$)}
+%      \item \Verbred{present\_or\_create($\cdots$)} or \Verbred{pcreate($\cdots$)}
+%    \end{itemize}
+%    \item \Verbred{reduction(operator:list)}
+%  \end{itemize}
+%\end{frame}
+%
+%%\begin{frame}<0>[fragile]{Runtime Libraries}
+%  \begin{itemize}
+%    \item System setup routines
+%    \begin{itemize}
+%      \item \Verbred{acc\_init(acc\_device\_nvidia)}
+%      \item \Verbred{acc\_set\_device\_type(acc\_device\_nvidia)}
+%      \item \Verbred{acc\_set\_device\_num(acc\_device\_nvidia)}
+%    \end{itemize}
+%    \item Synchronization routines
+%    \begin{itemize}
+%      \item \Verbred{acc\_async\_wait(int)}
+%      \item \Verbred{acc\_async\_wait\_all()}
+%    \end{itemize}
+%  \end{itemize}
+%\end{frame}
+%
+%%\begin{frame}<0>{Environment Variables}
+%%  \begin{itemize}
+%%    \item OMP\_NUM\_THREADS
+%%    \item OMP\_SCHEDULE
+%%    \item OMP\_STACKSIZE
+%%    \item OMP\_DYNAMIC
+%%    \item OMP\_NESTED
+%%    \item OMP\_WAIT\_POLICY
+%%    \item more $\cdots$
+%%  \end{itemize}
+%%\end{frame}
+%
+%
+%\begin{frame}<0>[fragile]
+%  \vspace{0.2cm}
+%  \begin{columns}[t]
+%    \column{0.5\textwidth}
+%    \begin{block}{Fortran}
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/nodataregion/saxpy_acc.f90} 
+%    \end{block}
+%    \column{0.5\textwidth}
+%    \begin{block}{C}
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/nodataregion/saxpy_acc.c} 
+%    \end{block}
+%  \end{columns}
+%\end{frame}
+%
+%\begin{frame}<0>[fragile]
+%  \frametitle{Compilation}
+%  \begin{itemize}
+%    \item C: \Verbindigo{nvc -acc [-Minfo=accel] [-gpu=cc75] -o saxpyc\_acc saxpy\_acc.c}
+%    \item Fortran 90:
+%    \Verbindigo{nvfortran -acc [-Minfo=accel] [-gpu=cc75] -o saxpyf\_acc saxpy\_acc.f90}
+%  \end{itemize}
+%  \begin{block}{}
+%    {\fontsize{4}{5}\selectfont
+%      \begin{Verbatim}
+%[alp514.hawk-b624](1002): nvc -acc -gpu=cc75 -Minfo=accel  -o saxpyc_acc saxpy_acc.c
+%main:
+%     15, Generating copyin(a) [if not already present]
+%         Generating create(y[:],x[:]) [if not already present]
+%     17, Loop is parallelizable
+%         Generating Tesla code
+%         17, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+%     25, Loop is parallelizable
+%         Generating Tesla code
+%         25, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
+%[alp514.hawk-b624](1003): nvfortran -acc -gpu=cc75 -Minfo=accel  -o saxpyf_acc saxpy_acc.f90
+%saxpy:
+%     10, Generating copyin(a) [if not already present]
+%         Generating create(y(:),x(:)) [if not already present]
+%     11, Generating Tesla code
+%         12, !$acc loop vector(128) ! threadidx%x
+%     12, Loop is parallelizable
+%     14, Generating Tesla code
+%         15, !$acc loop vector(128) ! threadidx%x
+%     15, Loop is parallelizable
+%     20, Generating Tesla code
+%         21, !$acc loop gang, vector(128) ! blockidx%x threadidx%x
+%      \end{Verbatim}
+%    }
+%  \end{block}
+%\end{frame}
 
-
-\begin{frame}<0>[fragile]
-  \vspace{0.2cm}
-  \begin{columns}[t]
-    \column{0.5\textwidth}
-    \begin{block}{Fortran}
-    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/nodataregion/saxpy_acc.f90} 
-    \end{block}
-    \column{0.5\textwidth}
-    \begin{block}{C}
-    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/nodataregion/saxpy_acc.c} 
-    \end{block}
-  \end{columns}
-\end{frame}
-
-\begin{frame}<0>[fragile]
-  \frametitle{Compilation}
-  \begin{itemize}
-    \item C: \Verbindigo{nvc -acc [-Minfo=accel] [-gpu=cc75] -o saxpyc\_acc saxpy\_acc.c}
-    \item Fortran 90:
-    \Verbindigo{nvfortran -acc [-Minfo=accel] [-gpu=cc75] -o saxpyf\_acc saxpy\_acc.f90}
-  \end{itemize}
-  \begin{block}{}
-    {\fontsize{4}{5}\selectfont
-      \begin{Verbatim}
-[alp514.hawk-b624](1002): nvc -acc -gpu=cc75 -Minfo=accel  -o saxpyc_acc saxpy_acc.c
-main:
-     15, Generating copyin(a) [if not already present]
-         Generating create(y[:],x[:]) [if not already present]
-     17, Loop is parallelizable
-         Generating Tesla code
-         17, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-     25, Loop is parallelizable
-         Generating Tesla code
-         25, #pragma acc loop gang, vector(128) /* blockIdx.x threadIdx.x */
-[alp514.hawk-b624](1003): nvfortran -acc -gpu=cc75 -Minfo=accel  -o saxpyf_acc saxpy_acc.f90
-saxpy:
-     10, Generating copyin(a) [if not already present]
-         Generating create(y(:),x(:)) [if not already present]
-     11, Generating Tesla code
-         12, !$acc loop vector(128) ! threadidx%x
-     12, Loop is parallelizable
-     14, Generating Tesla code
-         15, !$acc loop vector(128) ! threadidx%x
-     15, Loop is parallelizable
-     20, Generating Tesla code
-         21, !$acc loop gang, vector(128) ! blockidx%x threadidx%x
-      \end{Verbatim}
-    }
-  \end{block}
-\end{frame}
-
-\begin{frame}<0>{Run OpenACC Code}
-  \begin{columns}
-    \column{0.8\textwidth}
-    \begin{exampleblock}{}
-      \begin{tabular}{|b|b|b|b|b|}
-        \hline
-        \rowcolor{lublue}Execution& \multicolumn{2}{c|}{C}& \multicolumn{2}{c|}{Fortran} \\
-        \cline{2-5}
-        \rowcolor{lublue}&  Time & SpeedUp & Time & Speedup \\
-        \hline
-        Serial & 0.660000 & & 0.664236 & \\
-        OpenMP (12 Threads) & 0.215059 & 3.255 & 0.216842 & 5.351 \\
-        OpenMP (24 Threads) & 0.130821 & 3.297 & 0.230112 & 3.107 \\
-        OpenACC (GTX 1080) & 1.664477 & 0.401 & 1.663103 & 0.410 \\
-          \hline
-      \end{tabular}
-    \end{exampleblock}
-  \end{columns}
-  \begin{itemize}
-    \item What's going with OpenACC code?
-    \item Why even bother with OpenACC if performance is so bad?
-  \end{itemize}
-\end{frame}
+%\begin{frame}<0>{Run OpenACC Code}
+%  \begin{columns}
+%    \column{0.8\textwidth}
+%    \begin{exampleblock}{}
+%      \begin{tabular}{|b|b|b|b|b|}
+%        \hline
+%        \rowcolor{lublue}Execution& \multicolumn{2}{c|}{C}& \multicolumn{2}{c|}{Fortran} \\
+%        \cline{2-5}
+%        \rowcolor{lublue}&  Time & SpeedUp & Time & Speedup \\
+%        \hline
+%        Serial & 0.660000 & & 0.664236 & \\
+%        OpenMP (12 Threads) & 0.215059 & 3.255 & 0.216842 & 5.351 \\
+%        OpenMP (24 Threads) & 0.130821 & 3.297 & 0.230112 & 3.107 \\
+%        OpenACC (GTX 1080) & 1.664477 & 0.401 & 1.663103 & 0.410 \\
+%          \hline
+%      \end{tabular}
+%    \end{exampleblock}
+%  \end{columns}
+%  \begin{itemize}
+%    \item What's going with OpenACC code?
+%    \item Why even bother with OpenACC if performance is so bad?
+%  \end{itemize}
+%\end{frame}
 
 \begin{frame}{Processing Flow}
   \only<1>{\includegraphics[width=\textwidth]{./kernel_h-d}}
@@ -759,16 +760,16 @@ saxpy:
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \begin{columns}[t]
-    \column{0.5\textwidth}
-    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy_acc.f90} 
-    \column{0.5\textwidth}
-    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_acc.c} 
-  \end{columns}
-\end{frame}
+%\begin{frame}[fragile]
+%  \begin{columns}[t]
+%    \column{0.5\textwidth}
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy_acc.f90} 
+%    \column{0.5\textwidth}
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_acc.c} 
+%  \end{columns}
+%\end{frame}
 
-\begin{frame}{ SAXPY using data clause}
+%\begin{frame}{ SAXPY using data clause}
 %  \begin{columns}
 %    \column{0.5\textwidth}
 %    \begin{eblock}{}
@@ -779,24 +780,24 @@ saxpy:
 %      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_acc.c}
 %    \end{eblock}
 %  \end{columns}
-  \begin{columns}
-    \column{0.8\textwidth}
-    \begin{exampleblock}{}
-      \begin{tabular}{|b|b|b|b|b|}
-        \hline
-        \rowcolor{lublue}Execution& \multicolumn{2}{c|}{C}& \multicolumn{2}{c|}{Fortran} \\
-        \cline{2-5}
-        \rowcolor{lublue}&  Time & SpeedUp & Time & Speedup \\
-        \hline
-        Serial & 0.660000 & & 0.664236 & \\
-        OpenMP (12 Threads) & 0.215059 & 3.255 & 0.216842 & 5.351 \\
-        OpenMP (24 Threads) & 0.130821 & 3.297 & 0.230112 & 3.107 \\
-        OpenACC (GTX 1080) & 0.050374 & 13.102 & 0.050122 & 13.252 \\
-          \hline
-      \end{tabular}
-    \end{exampleblock}
-  \end{columns}
-\end{frame}
+%  \begin{columns}
+%    \column{0.8\textwidth}
+%    \begin{exampleblock}{}
+%      \begin{tabular}{|b|b|b|b|b|}
+%        \hline
+%        \rowcolor{lublue}Execution& \multicolumn{2}{c|}{C}& \multicolumn{2}{c|}{Fortran} \\
+%        \cline{2-5}
+%        \rowcolor{lublue}&  Time & SpeedUp & Time & Speedup \\
+%        \hline
+%        Serial & 0.660000 & & 0.664236 & \\
+%        OpenMP (12 Threads) & 0.215059 & 3.255 & 0.216842 & 5.351 \\
+%        OpenMP (24 Threads) & 0.130821 & 3.297 & 0.230112 & 3.107 \\
+%        OpenACC (GTX 1080) & 0.050374 & 13.102 & 0.050122 & 13.252 \\
+%          \hline
+%      \end{tabular}
+%    \end{exampleblock}
+%  \end{columns}
+%\end{frame}
 
 %\begin{frame}{ Exercise: Matrix Multiplication}
 %  \begin{columns}
@@ -913,6 +914,13 @@ saxpy:
 %  \end{exampleblock}
 \end{frame}
 
+\begin{frame}{Exercise}
+  \begin{itemize}
+    \item Parallelize the Pi Calculation code using the Reduction clause
+    \item Compare timing with serial and openmp code
+  \end{itemize}
+\end{frame}
+
 \begin{frame}[c]{Nested Loops}
   \begin{itemize}
     \item Currently we have only exposed parallelism on the outer loop
@@ -938,7 +946,7 @@ for(int i=0; i<N; i++)
     ...
         \end{lstlisting}
         \column{0.5cm}
-        \fontsize{85}{20}\selectfont{\color{lubrown}\}}
+        \fontsize{85}{20}\selectfont{\color{lubrown}$\Rightarrow$}
         \column{3.5cm}
         \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
 #pragma acc parallel 
@@ -951,6 +959,13 @@ for(int ij=0; ij<N*N; ij++)
   \end{columns}
   \vspace{0.25cm}
  Loops must be tightly nested
+\end{frame}
+
+\begin{frame}{Exercise}
+  \begin{itemize}
+    \item Parallelze the Matmul code using collapse clause
+    \item Compare timings and GFLOPS with serial and openmp code
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{ Further Speedups}
@@ -997,8 +1012,12 @@ for(int ij=0; ij<N*N; ij++)
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Acknowledgements}
+\begin{frame}{Further Reading and References}
   \begin{itemize}
+    \item \href{https://www.openacc.org/sites/default/files/inline-files/OpenACC_Programming_Guide_0_0.pdf}{OpenACC Programming and Best Practices Guide }
+    \item \href{https://www.openacc.org/sites/default/files/inline-files/API\%20Guide\%202.7.pdf}{OpenACC 2.7 API Reference Card}
+    \item Parallel programming with OpenACC - Rob Farber (\href{https://asa.lib.lehigh.edu/Record/11244523}{Libraries Link})
+    \item OpenACC for Programmers: Concepts and Strategies - Guido Juckeland and Sunita Chandrasekaran (\href{https://asa.lib.lehigh.edu/Record/11188103}{Libraries Link})
     \item[] Lecture derived from slides and presentations by
     \item Michael Wolfe, PGI
     \item Jeff Larkin, NVIDIA
@@ -1006,6 +1025,8 @@ for(int ij=0; ij<N*N; ij++)
     \item[] Search for OpenACC presentations at the GPU Technology Conference Website for further study \url{http://www.gputechconf.com/gtcnew/on-demand-gtc.php}
   \end{itemize}
 \end{frame}
+
+\end{document}
 
 \setcounter{algorithm}{0}
 
