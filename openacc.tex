@@ -111,11 +111,7 @@
     \item OpenACC was developed by The Portland Group (PGI), Cray, CAPS and NVIDIA. 
     \item PGI, Cray, and CAPs have spent over 2 years developing and shipping commercial compilers that use directives to enable GPU acceleration as core technology. 
     \item The small differences between their approaches allowed the formation of a group to standardize a single directives approach for accelerators and CPUs.
-    \item Full OpenACC 2.0 Specification available online 
-      \begin{itemize}
-      \item \url{http://www.openacc-standard.org/}
-      \item Implementations available now from PGI and Cray
-      \end{itemize}
+    \item Full OpenACC 3.1 Specification available online: \url{https://www.openacc.org/specification}
     \end{itemize}
   \end{exampleblock}
 
@@ -403,8 +399,6 @@ saxpy:
          OpenMP (48 threads) & Xeon Gold 6230R & 0.026348 & 19.44 \\
          \hline
          OpenACC & Tesla T4 & 3.434997 & 0.15 \\ % 0.019029 26.91
-         \hline
-         CUDA & Tesla T4 & 0.000008 & 64016 \\
         \hline
       \end{tabular}
     \end{center}
@@ -733,8 +727,6 @@ Accelerator Kernel Timing data
          \hline
          OpenACC & Tesla T4 & 0.019029 & 26.91 \\
          \hline
-         CUDA & Tesla T4 & 0.000008 & 64016 \\
-        \hline
       \end{tabular}
     \end{center}
     }
@@ -873,14 +865,14 @@ Accelerator Kernel Timing data
     \item Reduction clause is allowed on \textit{parallel} and \textit{loop} constructs
   \end{itemize}
   \begin{exampleblock}{Fortran}
-    \begin{lstlisting}[basicstyle=\tiny\ttfamily,language=OmpFortran]
+    \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpFortran]
 !$acc parallel reduction(operation: var)
   structured block with reduction on var
 !$acc end parallel
     \end{lstlisting}
   \end{exampleblock}
   \begin{exampleblock}{C}
-    \begin{lstlisting}[basicstyle=\tiny\ttfamily,language=OmpC]
+    \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
 #pragma acc kernels reduction(operation: var) {
   structured block with reduction on var
 }
@@ -963,7 +955,7 @@ for(int ij=0; ij<N*N; ij++)
 
 \begin{frame}{Exercise}
   \begin{itemize}
-    \item Parallelze the Matmul code using collapse clause
+    \item Parallelize the Matmul code using collapse clause
     \item Compare timings and GFLOPS with serial and openmp code
   \end{itemize}
 \end{frame}

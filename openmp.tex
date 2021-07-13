@@ -133,9 +133,9 @@
   \frametitle{Parallelizing Serial Code}
   \begin{exampleblock}{Compiler Flags for Automatic Parallelization}
     \begin{itemize}
-      \item[GCC] -floop-parallelize-all
-      \item[Intel] -parallel
-      \item[PGI] -Mconcur
+      \item \bflub{GCC} -floop-parallelize-all
+      \item \bflub{Intel} -parallel
+      \item \bflub{NVHPC} -Mconcur
     \end{itemize}
   \end{exampleblock}
   \begin{block}{When to consider using OpenMP?}
@@ -162,7 +162,7 @@
       \item OpenMP is an Application Program Interface (API) for thread based parallelism; Supports Fortran, C and C++
       \item Uses a fork-join execution model
       \item OpenMP structures are built with program directives, runtime libraries and environment variables
-      \item OpenMP has been the industry standard for shared memory programming over the last decade
+      \item OpenMP has been the industry standard for shared memory programming since 1997
       \begin{itemize}
         \item Permanent members of the OpenMP Architecture Review Board: AMD, Cray, Fujutsu, HP, IBM, Intel, Microsoft, NEC, PGI, SGI, Sun
       \end{itemize}
@@ -176,22 +176,22 @@
   \vspace{-0.5cm}
   \begin{block}{}
     \begin{itemize}
-      \item Standardization
+      \item \bflub{Standardization}
         \begin{itemize}
         \item Provide a standard among a variety of shared memory architectures/platforms
         \item Jointly defined and endorsed by a group of major computer hardware and software vendors
         \end{itemize}
-      \item Lean and Mean
+      \item \bflub{Lean and Mean}
         \begin{itemize}
         \item Establish a simple and limited set of directives for programming shared memory machines.
         \item Significant parallelism can be implemented by using just 3 or 4 directives.
         \end{itemize}
-      \item Ease to use 
+      \item \bflub{Ease to use}
       \begin{itemize}
         \item Serial programs can be parallelized by adding compiler directives
         \item Allows for incremental parallelization - a serial program evolves into a parallel program by parallelizing different sections incrementally
       \end{itemize}
-      \item Portability
+      \item \bflub{Portability}
       \begin{itemize}
         \item Standard among many shared memory platforms
         \item Implemented in major compiler suites
@@ -548,17 +548,32 @@ Hello from thread  3 out of   4 threads
         \item If the thread id is odd, then print a message "Hello world from thread x, I'm odd!''
         \item If the thread id is even, then print a message "Hello world from thread x, I'm even!''
       \end{enumerate}
+    \item Running the example interactively, say you compiled the code as helloc
+	  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 --pty /bin/bash
+export OMP_NUM_THREADS=6
+./helloc
+           \end{lstlisting}
+     \item Run from the head node: 
+       \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+export OMP_NUM_THREADS=6
+srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 ./helloc
+       \end{lstlisting}
+     \item Alternate way to run from the head node: 
+       \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 --export=OMP_NUM_THREADS=6  ./helloc
+       \end{lstlisting}
   \end{itemize}
-  \begin{columns}
-    \column{0.45\textwidth}
-    \begin{block}{C}
-      \lstinputlisting[language=OmpC]{src/hello/exercise/hello.c}
-    \end{block}
-    \column{0.45\textwidth}
-    \begin{block}{Fortran}
-      \lstinputlisting[language=OmpFortran]{src/hello/exercise/hello.f90}
-    \end{block}
-  \end{columns}
+%  \begin{columns}
+%    \column{0.45\textwidth}
+%    \begin{block}{C}
+%      \lstinputlisting[language=OmpC]{src/hello/exercise/hello.c}
+%    \end{block}
+%    \column{0.45\textwidth}
+%    \begin{block}{Fortran}
+%      \lstinputlisting[language=OmpFortran]{src/hello/exercise/hello.f90}
+%    \end{block}
+%  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -571,13 +586,13 @@ Hello from thread  3 out of   4 threads
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
         \begin{Verbatim}
-[alp514.sol](1898): gcc -fopenmp  -o helloc hello.c
-[alp514.sol](1899): export OMP_NUM_THREADS=4
-[alp514.sol](1900): srun -p eng -n 1 -c 4 ./helloc
+[alp514.hawk-b624](1003): icc -o hello -qopenmp hello.c
+[alp514.hawk-b624](1004): icc -o helloc -qopenmp hello.c
+[alp514.hawk-b624](1005): OMP_NUM_THREADS=4 ./helloc
 Hello world from thread 0, I am even
-Hello world from thread 3, I am odd
-Hello world from thread 1, I am odd
 Hello world from thread 2, I am even
+Hello world from thread 1, I am odd
+Hello world from thread 3, I am odd
         \end{Verbatim}
       }
     \end{block}
@@ -588,13 +603,13 @@ Hello world from thread 2, I am even
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
         \begin{Verbatim}
-[alp514.sol](1906): nvfortran -mp  -o hellof hello.f90
-[alp514.sol](1907): interact -p eng -n 1 -c 4
-[alp514.sol-b110](893): OMP_NUM_THREADS=4 ./hellof
-Hello from thread   0, I am even!
-Hello from thread   2, I am even!
-Hello from thread   3, I am odd!
-Hello from thread   1, I am odd!
+[alp514.hawk-b624](1006): ifort -qopenmp -o hellof hello.f90
+[alp514.hawk-b624](1007): export OMP_NUM_THREADS=4
+[alp514.hawk-b624](1008): ./hellof
+ Hello from thread           0 , I am even!
+ Hello from thread           2 , I am even!
+ Hello from thread           1 , I am odd!
+ Hello from thread           3 , I am odd!
         \end{Verbatim}
       }
     \end{block}
@@ -656,7 +671,7 @@ Hello from thread   1, I am odd!
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-        \begin{lstlisting}[language=OmpC]
+        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=OmpC]
 #include <omp.h>
 
 int main() {
@@ -670,7 +685,7 @@ int main() {
      \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-        \begin{lstlisting}[language=OmpFortran]
+        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=OmpFortran]
 program paralleldo
 
   implicit none
@@ -747,11 +762,11 @@ end program paralleldo
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[language=OmpC,firstline=10,lastline=21]{./src/tmp.c}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpC,firstline=10,lastline=21]{./src/tmp.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[language=OmpFortran,firstline=14,lastline=23]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=14,lastline=23]{./src/tmp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -1021,6 +1036,7 @@ void wrong()
   \frametitle{Exercise: Calculate pi by Numerical Integration}
   \begin{columns}
     \column{5cm}
+    \vspace{-0.5cm}
     \begin{itemize}
       \item We know that
       \begin{align*}
@@ -1030,8 +1046,8 @@ void wrong()
       \begin{align*}
         \sum^N_{i=0}\,F(x_i)\Delta x \approx \pi
       \end{align*}
-      \item[] \fontsize{4}{5}{ Meadows et al, A ``hands-on'' introduction to OpenMP, SC09 }
-      \item Parallelize the code in the \texttt{exercise/calcpi} folder
+      \item[] {\fontsize{4}{5}{ Meadows et al, A ``hands-on'' introduction to OpenMP, SC09 }}
+      \item Parallelize the code in the \texttt{exercise/calc\_pi} folder
     \end{itemize}
     \column{5cm}
     \begin{center}
@@ -1311,7 +1327,6 @@ time to compute = 0.400939 seconds
     \item OMP\_SCHEDULE: control how iterations are scheduled for parallel loops.
   \end{itemize}
 \end{frame}
-
 
 \begin{frame}
   \frametitle{References}
