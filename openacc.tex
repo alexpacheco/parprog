@@ -296,7 +296,7 @@
   \begin{itemize}
     \item Parallelize the saxpy code by adding OpenACC directives - parallel or kernels
     \item Compile the code using the following flags to the NVIDIA HPC SDK compiler
-    \item[] \lstinline[basicstyle=\normalsize\ttfamily]|-acc -gpu|
+    \item[] \lstinline[basicstyle=\normalsize\ttfamily]|-acc -gpu=cc75|
     \item Run the code and compare timing with serial and openmp code
   \end{itemize}
 \end{frame}
@@ -329,7 +329,7 @@
   \vspace{-0.5cm}
   \begin{exampleblock}{Compile}
     \begin{lstlisting}[basicstyle=\fontsize{6}{8}\selectfont\ttfamily]
-[alp514.sol](1018): nvc -acc -gpu -o saxpyc_acc saxpy_acc.c
+[alp514.sol](1018): nvc -acc -gpu=cc75 -o saxpyc_acc saxpy_acc.c
     \end{lstlisting}
     \begin{itemize}
       \item Specify the gpu architecture: \lstinline[basicstyle=\small\ttfamily]|-gpu=cc75| 
@@ -360,11 +360,11 @@ saxpy:
         \hline
         \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
         \hline
-         Serial & Xeon Gold 6230R & 0.504534 & \\
+         Serial & Xeon Gold 5220R & 0.504534 & \\
          \hline
-         OpenMP (12 threads) & Xeon Gold 6230R & 0.050300 & 10.03 \\
-         OpenMP (24 threads) & Xeon Gold 6230R & 0.026623 & 18.95 \\
-         OpenMP (48 threads) & Xeon Gold 6230R & 0.025263 & 19.97 \\
+         OpenMP (12 threads) & Xeon Gold 5220R & 0.050300 & 10.03 \\
+         OpenMP (24 threads) & Xeon Gold 5220R & 0.026623 & 18.95 \\
+         OpenMP (48 threads) & Xeon Gold 5220R & 0.025263 & 19.97 \\
          \hline
          OpenACC & Tesla T4 & 0.517426 & 0.98  \\ % 0.009601 52.55
          \hline
@@ -392,11 +392,11 @@ saxpy:
         \hline
         \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
         \hline
-         Serial & Xeon Gold 6230R & 0.512128 & \\
+         Serial & Xeon Gold 5220R & 0.512128 & \\
          \hline
-         OpenMP (12 threads) & Xeon Gold 6230R & 0.056454 &  9.07 \\
-         OpenMP (24 threads) & Xeon Gold 6230R & 0.048442 & 10.57 \\
-         OpenMP (48 threads) & Xeon Gold 6230R & 0.026348 & 19.44 \\
+         OpenMP (12 threads) & Xeon Gold 5220R & 0.056454 &  9.07 \\
+         OpenMP (24 threads) & Xeon Gold 5220R & 0.048442 & 10.57 \\
+         OpenMP (48 threads) & Xeon Gold 5220R & 0.026348 & 19.44 \\
          \hline
          OpenACC & Tesla T4 & 3.434997 & 0.15 \\ % 0.019029 26.91
         \hline
@@ -698,11 +698,11 @@ Accelerator Kernel Timing data
         \hline
         \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
         \hline
-         Serial & Xeon Gold 6230R & 0.504534 & \\
+         Serial & Xeon Gold 5220R & 0.504534 & \\
          \hline
-         OpenMP (12 threads) & Xeon Gold 6230R & 0.050300 & 10.03 \\
-         OpenMP (24 threads) & Xeon Gold 6230R & 0.026623 & 18.95 \\
-         OpenMP (48 threads) & Xeon Gold 6230R & 0.025263 & 19.97 \\
+         OpenMP (12 threads) & Xeon Gold 5220R & 0.050300 & 10.03 \\
+         OpenMP (24 threads) & Xeon Gold 5220R & 0.026623 & 18.95 \\
+         OpenMP (48 threads) & Xeon Gold 5220R & 0.025263 & 19.97 \\
          \hline
          OpenACC & Tesla T4 & 0.009601 & 52.55 \\
          \hline
@@ -719,11 +719,11 @@ Accelerator Kernel Timing data
         \hline
         \rowcolor{lublue}Algorithm & Device & Time (s) & Speedup \\
         \hline
-         Serial & Xeon Gold 6230R & 0.512128 & \\
+         Serial & Xeon Gold 5220R & 0.512128 & \\
          \hline
-         OpenMP (12 threads) & Xeon Gold 6230R & 0.056454 &  9.07 \\
-         OpenMP (24 threads) & Xeon Gold 6230R & 0.048442 & 10.57 \\
-         OpenMP (48 threads) & Xeon Gold 6230R & 0.026348 & 19.44 \\
+         OpenMP (12 threads) & Xeon Gold 5220R & 0.056454 &  9.07 \\
+         OpenMP (24 threads) & Xeon Gold 5220R & 0.048442 & 10.57 \\
+         OpenMP (48 threads) & Xeon Gold 5220R & 0.026348 & 19.44 \\
          \hline
          OpenACC & Tesla T4 & 0.019029 & 26.91 \\
          \hline

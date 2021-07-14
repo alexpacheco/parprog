@@ -550,18 +550,18 @@ Hello from thread  3 out of   4 threads
       \end{enumerate}
     \item Running the example interactively, say you compiled the code as helloc
 	  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 --pty /bin/bash
+srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 --pty /bin/bash
 export OMP_NUM_THREADS=6
 ./helloc
            \end{lstlisting}
      \item Run from the head node: 
        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
 export OMP_NUM_THREADS=6
-srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 ./helloc
+srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 ./helloc
        \end{lstlisting}
      \item Alternate way to run from the head node: 
        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2021_prog_083121 --reservation=lst_165 --export=OMP_NUM_THREADS=6  ./helloc
+srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 --export=OMP_NUM_THREADS=6  ./helloc
        \end{lstlisting}
   \end{itemize}
 %  \begin{columns}
