@@ -1,4 +1,4 @@
-\documentclass[10pt,t]{beamer} 
+\documentclass[9pt,c]{beamer} 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \fontfamily{ppl}\selectfont
@@ -193,19 +193,24 @@
   \begin{itemize}
     \item There are two different types of MPI implementations commonly used. 
     \begin{enumerate}
-       \item \bflub{MPICH}: Developed by Argonne National Laboratory.
+       \item \bflub{MPICH}: Developed by Argonne National Laboratory. 
        \begin{itemize}
+           \item default MPI on Hawk.
            \item used as a starting point for various commercial and open source MPI libraries
-           \item \bflub{MVAPICH2}: Developed by D. K. Panda with support for  InfiniBand, iWARP, RoCE, and Intel Omni-Path. (default MPI on Sol),
-           \item \bflub{Intel MPI}: Intel's version of MPI. Part of Intel OneAPI HPC Toolkit
+           \item \bflub{MVAPICH2}: Developed by D. K. Panda with support for  InfiniBand, iWARP, RoCE, and Intel Omni-Path. 
+           \item[] default MPI on Sol.
+           \item \bflub{Intel MPI}: Intel's version of MPI. 
+           \item[] available as part of the Intel OneAPI HPC Toolkit
            \item \bflub{IBM MPI}:  for IBM BlueGene, and 
            \item \bflub{CRAY MPI}: for Cray systems.
        \end{itemize}
-       \item \bflub{OpenMPI}: A Free, Open Source implementation from merger of three well know MPI implementations. Can be used for commodity network as well as high speed network.
+       \item \bflub{OpenMPI}: A Free, Open Source implementation from merger of three well know MPI implementations. 
        \begin{itemize}
            \item \bflub{FT-MPI} from the University of Tennessee,
            \item \bflub{LA-MPI}: from Los Alamos National Laboratory,
            \item \bflub{LAM/MPI}: from Indiana University
+           \item Can be used for commodity network as well as high speed network.
+           \item available on Sol and Hawk but only libraries and a couple of packages are available.
        \end{itemize}
     \end{enumerate}
   \end{itemize}
@@ -215,10 +220,10 @@
   \frametitle{MPI Compilers}
   \begin{itemize}
     \item There is no MPI compiler available to compile programs nor is there is a compiler flag.
-    \item Instead, you need to build the MPI scripts for a particular compiler.
+    \item Instead, you need to build the MPI libraries for a particular compiler.
     \item You can use MVAPICH2 and MPICH on Sol
-    \item You should use MPICH only on Hawk. 
-    \item Each of these builds provide mpicc, mpicxx and mpif90 for compiling C, C++ and Fortran codes respectively that are wrapper for the underlying compilers
+    \item You should only use MPICH on Hawk. 
+    \item Each of these builds provide \lstC{mpicc}, \lstC{mpicxx} and \lstC{mpif90} for compiling C, C++ and Fortran codes respectively that are wrapper for the underlying compilers
   \end{itemize}
   \vspace{-0.25cm}
   \begin{block}{}
@@ -241,12 +246,12 @@ Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
   \begin{itemize}
   \item To run MPI applications, you need to launch the application using 
     \begin{itemize}
-       \item mpirun (OpenMPI), 
-       \item mpirun\_rsh (MPICH and MVAPICH2), or 
-       \item mpiexec (OpenMPI, MPICH and MVAPICH2).
+       \item \lstC{mpirun} (OpenMPI), 
+       \item \lstC{mpirun\_rsh} (MPICH and MVAPICH2), or 
+       \item \lstC{mpiexec} (OpenMPI, MPICH and MVAPICH2).
     \end{itemize}
-  \item mpirun, mpirun\_rsh and mpiexec are schedulers for the MPI library.
-  \item On clusters with SLURM scheduler, srun can be used to launched MPI applications
+  \item \lstC{mpirun}, \lstC{mpirun\_rsh} and \lstC{mpiexec} are schedulers for the MPI library.
+  \item On clusters with SLURM scheduler, \lstC{srun} can be used to launch MPI applications
   \item The MPI scheduler needs to be given additional information to correctly run MPI applications
   \end{itemize}
   \begin{center}
@@ -262,16 +267,17 @@ Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
     \end{tabular}
   }
   \end{center}
+  \framebreak
   \begin{itemize}
     \item Run an application myapp on 72 processors on a total of 3 nodes - node1, node2 and node3 
       \begin{itemize}
-        \item mpirun: \lstinline[basicstyle=\small\ttfamily]|mpirun -np 72 -f filename myapp|
-        \item mpirun\_rsh: \lstinline[basicstyle=\small\ttfamily]|mpirun_rsh -np 72 -hostfile filename myapp|
-        \item mpiexec: \lstinline[basicstyle=\small\ttfamily]|mpiexec -n 72 -hosts node1,node2,node3 -ppn 24 myapp|
+        \item \lstC{mpirun}: \texttt{mpirun -np 72  -f filename myapp}
+        \item \lstC{mpirun\_rsh}: \texttt{mpirun\_rsh -np 72  -hostfile filename myapp}
+        \item \lstC{mpiexec}: \texttt{mpiexec -n 72  -hosts node1,node2,node3  -ppn 24 myapp}
       \end{itemize}
-    \item The SLURM scheduler's srun launcher has information needed to run a mpi job
+    \item The SLURM scheduler's \lstC{srun} launcher has information needed to run a mpi job
       \begin{itemize}
-        \item srun: \lstinline[basicstyle=\small\ttfamily]|srun myapp|
+        \item \lstC{srun}: \texttt{srun myapp}
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -289,7 +295,7 @@ Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
           \hline
           \rowcolor{lublue}C & Fortran \\
           \hline
-          \lstC{#include "mpi.h"} & \lstfortran{include 'mpif.h'} \\
+          \lstC{#include "mpi.h"} & \lstfortran{include 'mpif.h'} OR \lstfortran{use mpi} \\
           \hline
         \end{tabular}
       \end{center}
@@ -395,6 +401,22 @@ MPI_FINALIZE (ierr)
 %  \end{enumerate}
 %\end{frame}
 
+
+\begin{frame}[fragile]{Example: Hellow World}
+  \begin{columns}
+    \column{0.45\textwidth}
+    \vspace{-0.5cm}
+    \begin{exampleblock}{C}
+      \lstinputlisting[language=OmpC]{src/mpi/helloworld.c}
+    \end{exampleblock}
+    \column{0.45\textwidth}
+    \vspace{-0.5cm}
+    \begin{exampleblock}{Fortran}
+      \lstinputlisting[language={OmpFortran}]{src/mpi/helloworld.f90}
+    \end{exampleblock}
+  \end{columns}
+\end{frame}
+
 \begin{frame}{Exercise: Writing your first MPI program}
   \begin{itemize}
     \item Take the hello world code and add a few Environment Management functions
@@ -440,11 +462,13 @@ Number of tasks= 4 My rank= 0 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 1 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 3 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 2 Running on hawk-b624.cc.lehigh.edu
+
 [alp514.sol](1028): srun -p hawkgpu -n 4 -t 10 ./helloc
 Number of tasks= 4 My rank= 0 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 1 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 3 Running on hawk-b624.cc.lehigh.edu
 Number of tasks= 4 My rank= 2 Running on hawk-b624.cc.lehigh.edu
+
 [alp514.sol](1031): srun -p lts -n 4 -N 4 -t 10 ./helloc
 Number of tasks= 4 My rank= 0 Running on sol-a105.cc.lehigh.edu
 Number of tasks= 4 My rank= 2 Running on sol-a107.cc.lehigh.edu
@@ -471,49 +495,53 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
   \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Communicators}
-  \begin{itemize}
-  \item A communicator is an identifier associated with a  group of processes
-    \only<1>{
-      \begin{center}
-        \includegraphics[width=0.5\textwidth]{./comm_world}      
-      \end{center}
-      \lstC{MPI_Comm_size(MPI_COMM_WORLD,int \&numtasks);}\\
-      \lstC{MPI_Comm_rank(MPI_COMM_WORLD,int \&rank);}\\
-      \vspace{0.5cm}
-      \lstfortran{call MPI_COMM_SIZE(MPI_COMM_WORLD, numtasks, ierr)}\\
-      \lstfortran{call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)}
-    }
-    \only<2->{
-      \begin{itemize}
-      \item Can be regarded as the name given to an ordered list of processes
-      \item Each process has a unique rank, which starts from 0 
-        (usually referred to as "root")
-      \item It is the context of MPI communications and operations
-        \begin{itemize}
-        \item For instance, when a function is called to send data to all 
-          processes, MPI needs to understand what "all" 
-        \end{itemize}
-      \item \lstC{MPI_COMM_WORLD}: the default communicator contains all processes 
-        running a MPI program
-      \item There can be many communicators
-        \begin{itemize}
-        \item e.g., \lstC{MPI_Comm_split(MPI_Commcomm, intcolor, int, kye, 
-          MPI_Comm* newcomm)}
-        \end{itemize}
-      \item A process can belong to multiple communicators
-        \begin{itemize}
-        \item The rank is usually different
-        \end{itemize}
-      \end{itemize}
-    }
-  \end{itemize}
-\end{frame}
+%\begin{frame}[fragile]
+%  \frametitle{Communicators}
+%  \begin{itemize}
+%  \item A communicator is an identifier associated with a  group of processes
+%    \only<1>{
+%      \begin{center}
+%        \includegraphics[width=0.5\textwidth]{./comm_world}      
+%      \end{center}
+%      \lstC{MPI_Comm_size(MPI_COMM_WORLD,int \&numtasks);}\\
+%      \lstC{MPI_Comm_rank(MPI_COMM_WORLD,int \&rank);}\\
+%      \vspace{0.5cm}
+%      \lstfortran{call MPI_COMM_SIZE(MPI_COMM_WORLD, numtasks, ierr)}\\
+%      \lstfortran{call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)}
+%    }
+%    \only<2->{
+%      \begin{itemize}
+%      \item Can be regarded as the name given to an ordered list of processes
+%      \item Each process has a unique rank, which starts from 0 
+%        (usually referred to as "root")
+%      \item It is the context of MPI communications and operations
+%        \begin{itemize}
+%        \item For instance, when a function is called to send data to all 
+%          processes, MPI needs to understand what "all" 
+%        \end{itemize}
+%      \item \lstC{MPI_COMM_WORLD}: the default communicator contains all processes 
+%        running a MPI program
+%      \item There can be many communicators
+%        \begin{itemize}
+%        \item e.g., \lstC{MPI_Comm_split(MPI_Commcomm, intcolor, int, kye, 
+%          MPI_Comm* newcomm)}
+%        \end{itemize}
+%      \item A process can belong to multiple communicators
+%        \begin{itemize}
+%        \item The rank is usually different
+%        \end{itemize}
+%      \end{itemize}
+%    }
+%  \end{itemize}
+%\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Communicator Information}
   \begin{itemize}
+  \item \lstC{MPI_COMM_WORLD}: the default communicator contains all processes running a MPI program.
+    \begin{center}
+      \includegraphics[width=0.5\textwidth]{./comm_world}      
+    \end{center}
   \item Rank: unique id of each process
     \begin{itemize}
     \item \textcolor{lubrown}{C:} \lstC{MPI_Comm_Rank(MPI_Comm comm, int *rank)}
@@ -674,6 +702,54 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
     \item[] C programs: this argument is passed by reference and usually must be prepended with an ampersand: \&var1
     \item \lstC{count}: number of data elements of a particular type to be sent
     \item \lstC{datatype}: MPI predefines its elementary data types
+      \begin{columns}
+        \column{0.45\textwidth}
+        {\footnotesize
+          \begin{center}
+            \begin{tabular}{|f|f|}
+              \hline
+              \rowcolor{lublue}C type  &   MPI type \\
+              \hline
+              char &   MPI\_CHAR \\
+              unsigned char &   MPI\_UNSIGNED\_CHAR \\
+              short &   MPI\_SHORT \\
+              unsigned short &   MPI\_UNSIGNED\_SHORT \\
+              int &   MPI\_INT \\
+              unsigned int &   MPI\_UNSIGNED \\
+              long int  &  MPI\_LONG \\
+              unsigned long int &   MPI\_UNSIGNED\_LONG \\
+              long long int  &  MPI\_LONG\_LONG\_INT \\
+              float  &  MPI\_FLOAT \\
+              double &   MPI\_DOUBLE \\
+              long double &   MPI\_LONG\_DOUBLE \\
+              unsigned char &   MPI\_BYTE \\
+              \hline
+            \end{tabular}
+          \end{center}
+          }
+        \column{0.45\textwidth}
+        {\footnotesize
+          \begin{center}
+            \begin{tabular}{|f|f|}
+              \hline
+              \rowcolor{lublue}Fortran type  &   MPI type \\
+              \hline
+              character(1) & MPI\_CHARACTER \\
+              integer & MPI\_INTEGER \\
+              integer*2 & MPI\_INTEGER2 \\
+              integer*4 & MPI\_INTEGER4 \\
+              real & MPI\_REAL \\
+              real*4 & MPI\_REAL4 \\
+              real*8 & MPI\_REAL8 \\
+              double precision & MPI\_DOUBLE\_PRECISION \\
+              complex & MPI\_COMPLEX \\
+              double complex & MPI\_DOUBLE\_COMPLEX \\
+              \hline
+            \end{tabular}
+          \end{center}
+        }
+      \end{columns}
+      \framebreak
     \item \lstC{dest}: indicates the process where a message should be delivered
     \item[] specified as the rank of the receiving process
     \item \lstC{source}: indicates the originating process of the message.
@@ -683,6 +759,7 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
     \item[] for a receive operation, the wild card \lstC{MPI\_ANY\_TAG} can be used to receive any message regardless of its tag.
     \item \lstC{comm}: indicates the communication context, or set of processes for which the source or destination fields are valid 
     \item[] unless the programmer is explicitly creating new communicators, the predefined communicator \lstC{MPI\_COMM\_WORLD} is usually used
+      \framebreak
     \item \lstC{status}: for a receive operation, indicates the source of the message and the tag of the message.
     \item[] C: pointer to a predefined structure \lstC{MPI\_Status}
     \item[] Fortran: integer array of size \lstC{MPI\_STATUS\_SIZE}
@@ -699,40 +776,37 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
     \item \bflub{MPI\_Send}: Basic blocking send operation
     \item \bflub{MPI\_Recv}: Receive a message and block until the requested data is available in the application buffer in the receiving task.
     \item \bflub{MPI\_Ssend}: Synchronous blocking send: Send a message and block until the application buffer in the sending task is free for reuse and the destination process has started to receive the message
-    \item \bflub{MPI\_Sendrecv}: Send a message and post a receive before blocking. Will block until the sending application buffer is free for reuse and until the receiving application buffer contains the received message
-    \item \bflub{MPI\_Wait[any,all,some]}: MPI\_Wait blocks until a specified non-blocking send or receive operation has completed. For multiple non-blocking operations, the programmer can specify any, all or some completions.
-    \item \bflub{MPI\_Probe}: Performs a blocking test for a message. The “wildcards” MPI\_ANY\_SOURCE and MPI\_ANY\_TAG may be used to test for a message from any source or with any tag. For the C routine, the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status. MPI\_TAG. For the Fortran routine, they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
-    \item \bflub{MPI\_Get\_Count}: Returns the source, tag and number of elements of datatype received. Can be used with both blocking and non-blocking receive operations. For the C routine, the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status. MPI\_TAG. For the Fortran routine, they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
+    \item \bflub{MPI\_Sendrecv}: Send a message and post a receive before blocking. 
+    \item[] Will block until the sending application buffer is free for reuse and until the receiving application buffer contains the received message
+    \framebreak
+    \item \bflub{MPI\_Probe}: Performs a blocking test for a message. 
+    \item[] The “wildcards” MPI\_ANY\_SOURCE and MPI\_ANY\_TAG may be used to test for a message from any source or with any tag. 
+    \item[] \lstC{C}: the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status.MPI\_TAG. 
+    \item[] \lstC{Fortran}: they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
+    \item \bflub{MPI\_Get\_Count}: Returns the source, tag and number of elements of datatype received. 
+    \item[] Can be used with both blocking and non-blocking receive operations. 
+    \item[] \lstC{C}: the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status.MPI\_TAG. 
+    \item[] \lstC{Fortran}: they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
   \end{itemize}
   \framebreak
   \vspace{-0.5cm}
   \begin{block}{}
-  \begin{lstlisting}[basicstyle=\fontsize{5}{7}\ttfamily,language=C]
+  \begin{lstlisting}[basicstyle=\scriptsize\ttfamily,language=C]
 MPI_Ssend (&buf,count,datatype,dest,tag,comm)
 MPI_Sendrecv (&sendbuf,sendcount,sendtype,dest,sendtag,
   &recvbuf,recvcount,recvtype,source,recvtag,
   comm,&status)
-MPI_Wait (&request,&status)
-MPI_Waitany (count,&array_of_requests,&index,&status)
-MPI_Waitall (count,&array_of_requests,&array_of_statuses)
-MPI_Waitsome (incount,&array_of_requests,&outcount,
-  &array_of_offsets, &array_of_statuses)
 MPI_Probe (source,tag,comm,&status)
 MPI_Get_count (&status,datatype,&count)
   \end{lstlisting}
   \end{block}
   \vspace{-0.25cm}
   \begin{block}{}
-  \begin{lstlisting}[basicstyle=\fontsize{5}{7}\selectfont\ttfamily,language=Fortran]
+  \begin{lstlisting}[basicstyle=\scriptsize\selectfont\ttfamily,language=Fortran]
 MPI_SSEND (buf,count,datatype,dest,tag,comm,ierr)
 MPI_SENDRECV (sendbuf,sendcount,sendtype,dest,sendtag,&
    recvbuf,recvcount,recvtype,source,recvtag,&
    comm,status,ierr)
-MPI_WAIT (request,status,ierr)
-MPI_WAITANY (count,array_of_requests,index,status,ierr)
-MPI_WAITALL (count,array_of_requests,array_of_statuses,ierr)
-MPI_WAITSOME (incount,array_of_requests,outcount,&
-   array_of_offsets, array_of_statuses,ierr)
 MPI_PROBE (source,tag,comm,status,ierr)
 MPI_GET_COUNT (status,datatype,count,ierr)
   \end{lstlisting}
@@ -742,44 +816,64 @@ MPI_GET_COUNT (status,datatype,count,ierr)
 \begin{frame}[fragile,allowframebreaks]{Exercise: Ping Pong}
   \begin{itemize}
     \item Modify the \lstC{pingpong.c} or \lstC{pingpong.f90} example to do a blocking send and recieve.
-    \item Task 0 send a ping to task 1 and awaits return ping
+    \item Task 0 sends a ping to task 1 and awaits return ping
     \item This example only requires two MPI processes
     \item What happens if you run on more than 2 cpus
   \end{itemize}
   \framebreak
-  \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+  \begin{exampleblock}{}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
 [alp514.sol](1132): mpicc -o pingpongc pingpong.c
 [alp514.sol](1133): mpif90 -o pingpongf pingpong.f90
 [alp514.sol](1134): srun -n 2 -p hawkgpu -t 5 ./pingpongc
 Task 1: Received 1 char(s) from task 0 with tag 1
 Task 0: Received 1 char(s) from task 1 with tag 1
+
 [alp514.sol](1135): srun -n 2 -p hawkgpu -t 5 ./pingpongf
 Task   1 : Received  1  char(s) from task  0 with tag  1
 Task   0 : Received  1  char(s) from task  1 with tag  1
-[2021-07-12 18:03.21] ~/Workshop/sum2017/src/mpi
+
 [alp514.sol](1136): srun -n 4 -p hawkgpu -t 5 ./pingpongf
 Task   1 : Received  1  char(s) from task  0 with tag  1
 Task   3 : Received  0  char(s) from task  0 with tag  0
 Task   2 : Received  0  char(s) from task  0 with tag  0
 Task   0 : Received  1  char(s) from task  1 with tag  1
+
 [alp514.sol](1137): srun -n 4 -p hawkgpu -t 5 ./pingpongc
 Task 0: Received 1 char(s) from task 1 with tag 1
 Task 1: Received 1 char(s) from task 0 with tag 1
 Task 2: Received -32766 char(s) from task 2496 with tag -1075053569
 Task 3: Received -32766 char(s) from task 1668810496 with tag 32588
-  \end{lstlisting}
+    \end{lstlisting}
+  \end{exampleblock}
 \end{frame}
 
 
 \begin{frame}[fragile,allowframebreaks]{Non Blocking Message Passing Functions}
   \begin{itemize}
-    \item \bflub{MPI\_ISend}: Identifies an area in memory to serve as a send buffer. Processing continues immediately without waiting for the message to be copied out from the application buffer. A communication request handle is returned for handling the pending message status. The program should not modify the application buffer until subsequent calls to MPI\_Wait or MPI\_Test indicate that the non-blocking send has completed.
-    \item \bflub{MPI\_Irecv}: Identifies an area in memory to serve as a receive buffer. Processing continues immediately without actually waiting for the message to be received and copied into the the application buffer. A communication request handle is returned for handling the pending message status. The program must use calls to MPI\_Wait or MPI\_Test to determine when the non-blocking receive operation completes and the requested message is available in the application buffer.
-    \item \bflub{MPI\_Issend}: Non-blocking synchronous send. Similar to MPI\_Isend(), except MPI\_Wait() or MPI\_Test() indicates when the destination process has received the message.
-    \item \bflub{MPI\_Test[any,all,some]}: MPI\_Test checks the status of a specified non-blocking send or receive operation. The “flag” parameter is returned logical true (1) if the operation has completed, and logical false (0) if not. For multiple non-blocking operations, the programmer can specify any, all or some completions.
-    \item \bflub{MPI\_Iprobe}: Performs a non-blocking test for a message. The “wildcards” MPI\_ANY\_SOURCE and MPI\_ANY\_TAG may be used to test for a message from any source or with any tag. The integer “flag” parameter is returned logical true (1) if a message has arrived, and logical false (0) if not. For the C routine, the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status.MPI\_TAG. For the Fortran routine, they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
+    \item \bflub{MPI\_ISend}: Identifies an area in memory to serve as a send buffer.
+    \item[] Processing continues immediately without waiting for the message to be copied out from the application buffer. 
+    \item[] A communication request handle is returned for handling the pending message status. 
+    \item[] The program should not modify the application buffer until the non-blocking send has completed.
+    \item \bflub{MPI\_Irecv}: Identifies an area in memory to serve as a receive buffer. 
+    \item[] Processing continues immediately without actually waiting for the message to be received and copied into the the application buffer. 
+    \item[] A communication request handle is returned for handling the pending message status. 
+    \item[] The program must use calls to MPI\_Wait or MPI\_Test to determine when the non-blocking receive operation completes and the requested message is available in the application buffer.
+    \item \bflub{MPI\_Issend}: Non-blocking synchronous send. 
+    \item[] Similar to MPI\_Isend(), except MPI\_Wait() or MPI\_Test() indicates when the destination process has received the message.
+    \framebreak
+    \item \bflub{MPI\_Test[any,all,some]}: MPI\_Test checks the status of a specified non-blocking send or receive operation. 
+    \item[] The “flag” parameter is returned logical true (1) if the operation has completed, and logical false (0) if not. 
+    \item[] For multiple non-blocking operations, the programmer can specify any, all or some completions.
+    \item \bflub{MPI\_Iprobe}: Performs a non-blocking test for a message. 
+    \item[] The “wildcards” MPI\_ANY\_SOURCE and MPI\_ANY\_TAG may be used to test for a message from any source or with any tag. The integer “flag” parameter is returned logical true (1) if a message has arrived, and logical false (0) if not. 
+    \item[] \lstC{C}: the actual source and tag will be returned in the status structure as status.MPI\_SOURCE and status.MPI\_TAG. 
+    \item[] \lstC{Fortran}: they will be returned in the integer array status(MPI\_SOURCE) and status(MPI\_TAG).
+    \item \bflub{MPI\_Wait[any,all,some]}: MPI\_Wait blocks until a specified non-blocking send or receive operation has completed. 
+    \item[] For multiple non-blocking operations, the programmer can specify any, all or some completions.
   \end{itemize}
   \framebreak
+  \begin{block}{}
   \begin{lstlisting}[basicstyle=\scriptsize\ttfamily,language=C]
 MPI_Issend (&buf,count,datatype,dest,tag,comm,&request)
 MPI_Test (&request,&flag,&status)
@@ -787,9 +881,14 @@ MPI_Testany (count,&array_of_requests,&index,&flag,&status)
 MPI_Testall (count,&array_of_requests,&flag,&array_of_statuses)
 MPI_Testsome (incount,&array_of_requests,&outcount,
   &array_of_offsets, &array_of_statuses)
+MPI_Wait (&request,&status)
+MPI_Waitany (count,&array_of_requests,&index,&status)
+MPI_Waitall (count,&array_of_requests,&array_of_statuses)
+MPI_Waitsome (incount,&array_of_requests,&outcount,
+  &array_of_offsets, &array_of_statuses)
 MPI_Iprobe (source,tag,comm,&flag,&status)
   \end{lstlisting}
-
+  
   \begin{lstlisting}[basicstyle=\scriptsize\ttfamily,language=Fortran]
 MPI_ISSEND (buf,count,datatype,dest,tag,comm,request,ierr)
 MPI_TEST (request,flag,status,ierr)
@@ -797,8 +896,14 @@ MPI_TESTANY (count,array_of_requests,index,flag,status,ierr)
 MPI_TESTALL (count,array_of_requests,flag,array_of_statuses,ierr)
 MPI_TESTSOME (incount,array_of_requests,outcount, &
    array_of_offsets, array_of_statuses,ierr)
+MPI_WAIT (request,status,ierr)
+MPI_WAITANY (count,array_of_requests,index,status,ierr)
+MPI_WAITALL (count,array_of_requests,array_of_statuses,ierr)
+MPI_WAITSOME (incount,array_of_requests,outcount,&
+   array_of_offsets, array_of_statuses,ierr)
 MPI_IPROBE (source,tag,comm,flag,status,ierr)  
   \end{lstlisting}
+  \end{block}
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Exercise: Ring}
@@ -807,7 +912,8 @@ MPI_IPROBE (source,tag,comm,flag,status,ierr)
     \item Each process sends 1 to the left and 2 to the right
   \end{itemize}
   \framebreak
-  \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+  \begin{exampleblock}{}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
 [alp514.sol](1160): mpicc -o ringc ring.c
 [alp514.sol](1161): mpif90 -o ringf ring.f90
 [alp514.sol](1162): srun -n 4 -p hawkgpu -t 10 ./ringc
@@ -819,6 +925,7 @@ Task 2: Received from task 1 with tag 1 and from task 3 with tag 2
 Task 2: Send to task 1 with tag 2 and to task 3 with tag 1
 Task 1: Received from task 0 with tag 1 and from task 2 with tag 2
 Task 1: Send to task 0 with tag 2 and to task 2 with tag 1
+
 [alp514.sol](1163): srun -n 4 -p hawkgpu -t 10 ./ringf
 Task  0: Received from task 3 with tag 1 and from task 1 with tag 2
 Task  0: Send to task 3 with tag 2 and to task 1 with tag 1
@@ -828,7 +935,8 @@ Task  3: Received from task 2 with tag 1 and from task 0 with tag 2
 Task  3: Send to task 2 with tag 2 and to task 0 with tag 1
 Task  1: Received from task 0 with tag 1 and from task 2 with tag 2
 Task  1: Send to task 0 with tag 2 and to task 2 with tag 1
-  \end{lstlisting}
+    \end{lstlisting}
+  \end{exampleblock}
 \end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{Collective Communications}
@@ -866,7 +974,8 @@ Task  1: Send to task 0 with tag 2 and to task 2 with tag 1
     \item \bflub{MPI\_Scan}: Performs a scan operation with respect to a reduction operation across a task group
   \end{itemize}
   \framebreak
-  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=C]
+  \begin{block}{}
+  \begin{lstlisting}[basicstyle=\scriptsize\ttfamily,language=C]
 MPI_Bcast (&buffer,count,datatype,root,comm)
 MPI_Scatter (&sendbuf,sendcnt,sendtype,&recvbuf,recvcnt,recvtype,root,comm)
 MPI_Gather (&sendbuf,sendcnt,sendtype,&recvbuf,recvcount,recvtype,root,comm)
@@ -877,7 +986,7 @@ MPI_Reduce_scatter (&sendbuf,&recvbuf,recvcount,datatype,op,comm)
 MPI_Alltoall (&sendbuf,sendcount,sendtype,&recvbuf,recvcnt,recvtype,comm)
 MPI_Scan (&sendbuf,&recvbuf,count,datatype,op,comm)
   \end{lstlisting}
-  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily,language=Fortran]
+  \begin{lstlisting}[basicstyle=\scriptsize\ttfamily,language=Fortran]
 MPI_BCAST (buffer,count,datatype,root,comm,ierr)
 MPI_SCATTER (sendbuf,sendcnt,sendtype,recvbuf,recvcnt,recvtype,root,comm,ierr)MPI_GATHER (sendbuf,sendcnt,sendtype,recvbuf,recvcount,recvtype,root,comm,ierr)
 MPI_ALLGATHER (sendbuf,sendcount,sendtype,recvbuf,recvcount,recvtype,comm,info)
@@ -887,31 +996,83 @@ MPI_REDUCE_SCATTER (sendbuf,recvbuf,recvcount,datatype,op,comm,ierr)
 MPI_ALLTOALL (sendbuf,sendcount,sendtype,recvbuf,recvcnt,recvtype,comm,ierr)
 MPI_SCAN (sendbuf,recvbuf,count,datatype,op,comm,ierr)
   \end{lstlisting}
+  \end{block}
 \end{frame}
 
-\begin{frame}{Exercise: Calculation of Pi}
+\begin{frame}[fragile,allowframebreaks]{Exercise: Calculation of Pi}
   \begin{itemize}
     \item Parallelize the \lstC{pi_mpi.f90} or \lstC{pi_mpi.c} making use of collective communication functions?
   \end{itemize}
+  \begin{exampleblock}{}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+[alp514.sol](1061): mpicc -o pic pi_mpi.c
+[alp514.sol](1062): mpif90 -o pif pi_mpi.f90
+[alp514.sol](1063): srun -n 6 -p hawkgpu --reservation=lts_165 -t 10 ./pic
+pi = 3.141592653589771
+time to compute = 0.02951 seconds
+
+[alp514.sol](1064): srun -n 6 -p hawkgpu --reservation=lts_165 -t 10 ./pif
+pi = 3.141592633589724
+time to compute =    0.023 seconds
+
+[alp514.sol](1065): srun -N 2 --ntasks-per-node=3 -p infolab -t 10  ./pic
+pi = 3.141592653589771
+time to compute = 0.0282662 seconds
+
+[alp514.sol](1066): srun -N 2 --ntasks-per-node=3 -p infolab -t 10  ./pif
+pi = 3.141592633589724
+time to compute =    0.015 seconds
+    \end{lstlisting}
+  \end{exampleblock}
+  \framebreak
+  \begin{exampleblock}{}
+    \begin{lstlisting}[basicstyle=\scriptsize\ttfamily]
+[alp514.sol](1081): srun -N 2 --ntasks-per-node=12 -p chem -t 10  ./pic
+pi = 3.141592653589797
+time to compute = 0.014163 seconds
+
+[alp514.sol](1082): srun -N 2 --ntasks-per-node=12 -p chem -t 10  ./pif
+pi = 3.141592633589827
+time to compute =    0.007 seconds
+
+[alp514.sol](1083): srun -N 2 --ntasks-per-node=24 -p chem -t 10  ./pic
+pi = 3.141592653589789
+time to compute = 0.0264809 seconds
+
+[alp514.sol](1084): srun -N 2 --ntasks-per-node=24 -p chem -t 10  ./pif
+pi = 3.141592633589773
+time to compute =    0.038 seconds
+
+[alp514.sol](1085): srun -N 2 --ntasks-per-node=36 -p chem -t 10  ./pic
+pi = 3.141592653589792
+time to compute = 0.184978 seconds
+
+[alp514.sol](1086): srun -N 2 --ntasks-per-node=36 -p chem -t 10  ./pif
+pi = 3.141592633589787
+time to compute =    0.014 seconds
+    \end{lstlisting}
+  \end{exampleblock}
 \end{frame}
+
+
 
 \begin{frame}{Further Reading}
   \begin{itemize}
+    \item Books
+    \begin{enumerate}
+      \item Parallel Programming with MPI by Peter Pacheco (No relation)
+      \item Using MPI - 2nd Edition: Portable Parallel Programming with the Message Passing Interface (Scientific and Engineering Computation) by William Gropp
+      \item Parallel Programming in C with MPI and Openmp by Michael J. Quinn
+      \item MPI: The Complete Reference by Marc Snir \textit{et. al.}
+      \item Beginning MPI (An Introduction in C) by Wesley Kendall      
+      \item[] Online version: \url{http://mpitutorial.com/}
+    \end{enumerate}
     \item Tutorials
     \begin{enumerate}
       \item MPI: \url{https://computing.llnl.gov/tutorials/mpi/}
       \item Advanced MPI: \url{https://hpc.llnl.gov/sites/default/files/DavidCronkSlides.pdf}
       \item CITutor: \url{https://www.citutor.org/}
       \item XSEDE HPC Monthly Workshop Series: \url{https://psc.edu/xsede-hpc-series-all-workshops}
-      \item MPI Tutorial: \url{http://mpitutorial.com/}
-    \end{enumerate}
-    \item Books
-    \begin{enumerate}
-      \item Beginning MPI (An Introduction in C) by Wesley Kendall
-      \item Parallel Programming with MPI by Peter Pacheco (No relation)
-      \item Using MPI - 2nd Edition: Portable Parallel Programming with the Message Passing Interface (Scientific and Engineering Computation) by William Gropp
-      \item Parallel Programming in C with MPI and Openmp by Michael J. Quinn
-      \item MPI: The Complete Reference by Marc Snir \textit{et. al.}
     \end{enumerate}
   \end{itemize}
 \end{frame}
