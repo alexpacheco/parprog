@@ -11,11 +11,11 @@
 
 \input{mypreamble}
 
-\title{Introduction to OpenMP}
-\subtitle{2021~HPC~Workshop:~Parallel~Programming}
+\title[OpenMP]{Introduction to OpenMP}
+\subtitle{HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
 \institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~13~-~15,~2021}
+\date{}%July~13~-~15,~2021}
     
 
 \begin{document}
@@ -331,11 +331,11 @@
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C}
-      \lstinputlisting[language=OmpC]{src/hello/solution/helloworld.c}
+      \lstinputlisting[language=OmpC]{../slides/code/parprog/src/hello/solution/helloworld.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[language={OmpFortran}]{src/hello/solution/helloworld.f90}
+      \lstinputlisting[language={OmpFortran}]{../slides/code/parprog/src/hello/solution/helloworld.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -352,7 +352,7 @@
         \item[NVHPC:] \lstinline[basicstyle=\normalsize\ttfamily]|-mp|
       \end{itemize}
       \begin{lstlisting}[basicstyle=\small\ttfamily]
-[alp514.sol](1032): gfortran -fopenmp -o helloc hello.c
+[alp514.sol](1032): gcc -fopenmp -o helloc hello.c
 [alp514.sol](1033): ifort -qopenmp -o hellof hello.f90
       \end{lstlisting}
     \item[Running]: Need to specify number of openmp threads to run code on
@@ -550,28 +550,28 @@ Hello from thread  3 out of   4 threads
       \end{enumerate}
     \item Running the example interactively, say you compiled the code as helloc
 	  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 --pty /bin/bash
+srun -p hawkgpu -n 6 -t 30 -A hpc2022_prog_083122 --reservation=hpc2022_prog_083122_183 --pty /bin/bash
 export OMP_NUM_THREADS=6
 ./helloc
            \end{lstlisting}
      \item Run from the head node: 
        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
 export OMP_NUM_THREADS=6
-srun -p hawkgpu -n 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 ./helloc
+srun -p hawkgpu -n 6 -t 30 -A hpc2022_prog_083122 --reservation=hpc2022_prog_083122_183 ./helloc
        \end{lstlisting}
      \item Alternate way to run from the head node: 
        \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
-srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 --export=OMP_NUM_THREADS=6  ./helloc
+srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2022_prog_083122 --reservation=hpc2022_prog_083122_183 --export=OMP_NUM_THREADS=6  ./helloc
        \end{lstlisting}
   \end{itemize}
 %  \begin{columns}
 %    \column{0.45\textwidth}
 %    \begin{block}{C}
-%      \lstinputlisting[language=OmpC]{src/hello/exercise/hello.c}
+%      \lstinputlisting[language=OmpC]{../slides/code/parprog/src/hello/exercise/hello.c}
 %    \end{block}
 %    \column{0.45\textwidth}
 %    \begin{block}{Fortran}
-%      \lstinputlisting[language=OmpFortran]{src/hello/exercise/hello.f90}
+%      \lstinputlisting[language=OmpFortran]{../slides/code/parprog/src/hello/exercise/hello.f90}
 %    \end{block}
 %  \end{columns}
 \end{frame}
@@ -581,7 +581,7 @@ srun -p hawkgpu -n 1 -c 6 -t 30 -A hpc2021_prog_083121 --reservation=lts_165 --e
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[language=OmpC]{src/hello/solution/hello.c}
+      \lstinputlisting[language=OmpC]{../slides/code/parprog/src/hello/solution/hello.c}
     \end{exampleblock}
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
@@ -598,7 +598,7 @@ Hello world from thread 3, I am odd
     \end{block}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[language={OmpFortran}]{src/hello/solution/hello.f90}
+      \lstinputlisting[language={OmpFortran}]{../slides/code/parprog/src/hello/solution/hello.f90}
     \end{exampleblock}
     \begin{block}{}
       {\fontsize{4}{5}\selectfont
@@ -630,7 +630,7 @@ Hello world from thread 3, I am odd
           \texttt{\#pragma omp for}
           \\
         }
-        \includegraphics[width=0.5\textwidth]{./work_share1}
+        \includegraphics[width=0.5\textwidth]{../slides/image/parprog/work_share1}
       }
     \end{block}
     \column{0.33\textwidth}
@@ -642,7 +642,7 @@ Hello world from thread 3, I am odd
           \texttt{\#pragma sections} 
           \\
         }
-        \includegraphics[width=0.5\textwidth]{./work_share2}
+        \includegraphics[width=0.5\textwidth]{../slides/image/parprog/work_share2}
       }
     \end{block}
     \column{0.33\textwidth}
@@ -654,7 +654,7 @@ Hello world from thread 3, I am odd
           \texttt{\#pragma omp single}
           \\
         }
-        \includegraphics[width=0.5\textwidth]{./work_share3}
+        \includegraphics[width=0.5\textwidth]{../slides/image/parprog/work_share3}
       }
     \end{block}
   \end{columns}
@@ -762,11 +762,11 @@ end program paralleldo
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpC,firstline=10,lastline=21]{./src/tmp.c}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpC,firstline=10,lastline=21]{../slides/code/parprog/src/tmp.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=14,lastline=23]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=14,lastline=23]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -808,11 +808,11 @@ end program paralleldo
 %  \begin{columns}
 %    \column{0.45\textwidth}
 %    \begin{block}{C}
-%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy.c}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/saxpy/solution/saxpy.c}
 %    \end{block}
 %    \column{0.45\textwidth}
 %    \begin{block}{Fortran}
-%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy.f90}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy.f90}
 %    \end{block}
 %  \end{columns}
 \end{frame}
@@ -822,11 +822,11 @@ end program paralleldo
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_omp.c}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\ttfamily,language=OmpC]{../slides/code/parprog/src/saxpy/solution/saxpy_omp.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy_omp.f90}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{4}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_omp.f90}
     \end{exampleblock}
   \end{columns}
   \begin{columns}
@@ -882,11 +882,11 @@ end program paralleldo
   \begin{columns}
     \column{0.45\textwidth}
     \begin{center}
-      \includegraphics[width=0.75\textwidth]{./falsesharing}
+      \includegraphics[width=0.75\textwidth]{../slides/image/parprog/falsesharing}
     \end{center}
     \column{0.45\textwidth}
     \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=51,lastline=57]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=51,lastline=57]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -909,7 +909,7 @@ end program paralleldo
     \column{0.5\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=59,lastline=65]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=59,lastline=65]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -941,7 +941,7 @@ end program paralleldo
     \column{0.5\textwidth}
     \begin{exampleblock}{Critical}
       Only one thread at a time can enter a \texttt{critical} region
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=67,lastline=73]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=67,lastline=73]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
 %  \end{columns}
 %  \begin{itemize}
@@ -951,7 +951,7 @@ end program paralleldo
     \column{0.5\textwidth}
     \begin{exampleblock}{Atomic}
       Only one thread at a time can update a memory location
-      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=75,lastline=81]{./src/tmp.f90}
+      \lstinputlisting[basicstyle=\footnotesize\ttfamily,language=OmpFortran,firstline=75,lastline=81]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}  
   \end{columns}
 \end{frame}
@@ -1051,7 +1051,7 @@ void wrong()
     \end{itemize}
     \column{5cm}
     \begin{center}
-      \includegraphics[width=4cm]{./pi}
+      \includegraphics[width=4cm]{../slides/image/parprog/pi}
     \end{center}
   \end{columns}
 \end{frame}
@@ -1061,11 +1061,11 @@ void wrong()
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=C]{./src/calc_pi/exercise/pi_serial.c}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=C]{../slides/code/parprog/src/calc_pi/exercise/pi_serial.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language={[90]Fortran}]{./src/calc_pi/exercise/pi_serial.f90}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language={[90]Fortran}]{../slides/code/parprog/src/calc_pi/exercise/pi_serial.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -1076,12 +1076,12 @@ void wrong()
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpC]{./src/calc_pi/solution/pi_omp1.c}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/calc_pi/solution/pi_omp1.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\ttfamily,language=OmpFortran]{./src/calc_pi/solution/pi_omp1.f90}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\ttfamily,language=OmpFortran]{../slides/code/parprog/src/calc_pi/solution/pi_omp1.f90}
     \end{exampleblock}
   \end{columns}
   \begin{block}{}
@@ -1191,11 +1191,11 @@ end program reduction
   \begin{columns}
     \column{5cm}
     \begin{exampleblock}{C }
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpC]{./src/calc_pi/solution/pi_omp.c}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/calc_pi/solution/pi_omp.c}
     \end{exampleblock}
     \column{5cm}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{5}{6}\ttfamily,language=OmpFortran]{./src/calc_pi/solution/pi_omp.f90}
+      \lstinputlisting[basicstyle=\fontsize{5}{6}\ttfamily,language=OmpFortran]{../slides/code/parprog/src/calc_pi/solution/pi_omp.f90}
     \end{exampleblock}
   \end{columns}
   \begin{block}{}
@@ -1238,7 +1238,7 @@ time to compute = 0.400939 seconds
     \item Consider a matrix {\bf C} of two matrices {\bf A} and {\bf B}:
     \item[] Element {\it i,j} of {\bf C} is the dot product of the $i^{th}$ row of {\bf A} and $j^{th}$ column of {\bf B}
       \begin{center}
-        \includegraphics[width=0.5\textwidth]{./matmul}
+        \includegraphics[width=0.5\textwidth]{../slides/image/parprog/matmul}
       \end{center}
     \item Parallelize the code in the \texttt{exercise/matmul} folder
     \item Calculate the speedup with respect to serial code.
@@ -1248,12 +1248,12 @@ time to compute = 0.400939 seconds
 %    \column{0.45\textwidth}
 %    \vspace{-1cm}
 %    \begin{block}{C}
-%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/exercise/matmul.c}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/matmul/exercise/matmul.c}
 %    \end{block}
 %    \column{0.45\textwidth}
 %    \vspace{-1cm}
 %    \begin{block}{Fortran}
-%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/exercise/matmul.f90}
+%      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/matmul/exercise/matmul.f90}
 %    \end{block}
 %  \end{columns}
 \end{frame}
@@ -1288,12 +1288,12 @@ time to compute = 0.400939 seconds
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{C}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_omp.c}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/matmul/solution/matmul_omp.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_omp.f90}
+      \lstinputlisting[basicstyle=\fontsize{3.5}{3.5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/matmul/solution/matmul_omp.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}

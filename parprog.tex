@@ -12,10 +12,10 @@
 \include{mypreamble}
 
 \title{Parallel Programming Concepts}
-\subtitle{2021~HPC~Workshop:~Parallel~Programming}
+\subtitle{HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
 \institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~13~-~15,~2021}
+\date{}%July~13~-~15,~2021}
 
 \AtBeginSection[]
 {
@@ -57,7 +57,7 @@
     \item Only one instruction may execute at any moment in time
     \end{itemize}
   \end{itemize}
-  \includegraphics[width=\textwidth]{./serialProblem}
+  \includegraphics[width=\textwidth]{../slides/image/parprog/serialProblem}
 \end{frame}
 
 \begin{frame}
@@ -98,7 +98,7 @@
     \end{itemize}
   \end{itemize}
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{./parallelProblem}
+    \includegraphics[width=0.7\textwidth]{../slides/image/parprog/parallelProblem}
   \end{center}
 \end{frame}
 
@@ -124,7 +124,7 @@
     \item Compared to serial computing, parallel computing is much better suited for modeling, simulating and understanding complex, real world phenomena.
     \end{itemize}
     \begin{center}
-      \includegraphics[width=0.5\textwidth]{./realworldcollage}
+      \includegraphics[width=0.5\textwidth]{../slides/image/parprog/realworldcollage}
     \end{center}
     \framebreak
   \item SAVE TIME AND/OR MONEY:
@@ -171,7 +171,7 @@
       \item[] Exaflop = $10^{18}$ calculations per second
       \end{itemize}
       \column{0.5\textwidth}
-      \includegraphics[width=0.95\textwidth]{./top500}
+      \includegraphics[width=0.95\textwidth]{../slides/image/parprog/top500}
     \end{columns}
   \end{itemize}
 \end{frame}
@@ -183,7 +183,7 @@
   \item Lets say, it takes x mins per box. Total time required to move the boxes is 25x.
   \item How do you speed up moving 25 boxes from Location A to Location B?
   \end{itemize}
-  \includegraphics[width=\textwidth,clip=true]{./Serial}
+  \includegraphics[width=\textwidth,clip=true]{../slides/image/parprog/Serial}
 \end{frame}
 
 \begin{frame}
@@ -194,7 +194,7 @@
   \end{itemize}
   \vspace{-0.9cm}
   \begin{center}
-    \includegraphics[width=0.75\textwidth,clip=true]{./Parallel}
+    \includegraphics[width=0.75\textwidth,clip=true]{../slides/image/parprog/Parallel}
     \vspace{-0.8cm}
     \only<2>{
     \begin{tabular}{|b|b|}
@@ -257,7 +257,7 @@
       \end{itemize}
     \end{itemize}
     \column{0.5\textwidth}
-    \includegraphics[width=\textwidth]{./speedup}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/speedup}
 %    \begin{tikzpicture}[domain=0:1.8,scale=2]
 %      %    \draw[very thin,color=gray] (0.0,0.0) grid (2.0,2.0);
 %      \draw[->] (0,0) -- (2.0,0) node[below] {$N_{\mathrm{Proc}}$};
@@ -287,7 +287,7 @@
 
 \begin{frame}{Maximal Possible Speedup}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{./amdahl}
+    \includegraphics[width=0.9\textwidth]{../slides/image/parprog/amdahl}
   \end{center}
 \end{frame}
 
@@ -339,7 +339,7 @@
     P_{2,2} &= M_{2,1}*N_{1,2}+M_{2,2}*N_{2,2}+M_{2,3}*N_{3,2}+M_{2,4}*N_{4,2}
   \end{align*}
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{./MatMul}
+    \includegraphics[width=0.7\textwidth]{../slides/image/parprog/MatMul}
   \end{center}
 \end{frame}
 
@@ -355,7 +355,7 @@
     \end{itemize}
   \end{itemize}
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{./ParMatMul}
+    \includegraphics[width=0.7\textwidth]{../slides/image/parprog/ParMatMul}
   \end{center}
 \end{frame}
 
@@ -560,7 +560,7 @@ for i = istart, iend
       \item Data conflict issues
       \end{itemize}
     \end{itemize}
-    \includegraphics[width=\textwidth]{./fork_join2}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/fork_join2}
     \column{5cm}
     \vspace{-1cm}
     \begin{description}
@@ -578,7 +578,7 @@ for i = istart, iend
       \item Data sharing is slow
       \end{itemize}
     \end{itemize}
-    \includegraphics[width=0.9\textwidth]{./msg_pass_model}
+    \includegraphics[width=0.9\textwidth]{../slides/image/parprog/msg_pass_model}
   \end{columns}
 \end{frame}
 
@@ -646,7 +646,7 @@ for i = istart, iend
   \item Back to our box moving example
   \item What if there is a very long corridor that allows only one work to pass at a time between Location A and B?
   \end{itemize}
-  \includegraphics[width=\textwidth]{./Parallel_Load}
+  \includegraphics[width=\textwidth]{../slides/image/parprog/Parallel_Load}
 \end{frame}
 
 \begin{frame}
@@ -686,7 +686,7 @@ for i = istart, iend
 
 \begin{frame}
   \frametitle{Memory Heirarchy}
-  \includegraphics[width=\textwidth]{./MemHier}
+  \includegraphics[width=\textwidth]{../slides/image/parprog/MemHier}
   \begin{itemize}
   \item Avoid unnecessary data transfer
   \item Load data in blocks (spatial locality)
@@ -701,7 +701,7 @@ for i = istart, iend
   \item Back to our box moving example, again
   \item Anyone see a problem?
   \end{itemize}
-  \includegraphics[width=\textwidth]{./Load-Balance}
+  \includegraphics[width=\textwidth]{../slides/image/parprog/Load-Balance}
 \end{frame}
 
 \begin{frame}
@@ -757,7 +757,7 @@ for i = istart, iend
 \begin{frame}
   \frametitle{The Free Lunch Is Over}
   \begin{center}
-    \includegraphics[width=0.6\textwidth]{CPUTrend}
+    \includegraphics[width=0.6\textwidth]{../slides/image/parprog/CPUTrend}
     
     
     \tiny{Source: Herb Sutter\\
@@ -767,7 +767,7 @@ for i = istart, iend
 
 \begin{frame}
   \frametitle{Power and Clock Speed}
-  \includegraphics[width=\textwidth]{./CPUheat}
+  \includegraphics[width=\textwidth]{../slides/image/parprog/CPUheat}
 \end{frame}
 
 \begin{frame}
@@ -789,7 +789,7 @@ for i = istart, iend
     \end{itemize}
   \end{itemize}
   \begin{center}
-    \includegraphics[width=0.6\textwidth]{./cpucore}
+    \includegraphics[width=0.6\textwidth]{../slides/image/parprog/cpucore}
     
     \tiny{Source: John Urbanic, PSC}
   \end{center}
@@ -819,7 +819,7 @@ for i = istart, iend
 
 \begin{frame}{CPU vs GPU}
   \centering{
-    \includegraphics[width=\textwidth]{./gpu-devotes-more-transistors-to-data-processing}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/gpu-devotes-more-transistors-to-data-processing}
   }
 \end{frame}
 	
@@ -842,7 +842,7 @@ for i = istart, iend
     \item Memory (Bandwidth): 320GBs
     \end{itemize}
     \column{0.5\textwidth}
-    \includegraphics[width=\textwidth]{./turing}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/turing}
   \end{columns}
 \end{frame}
 
@@ -861,19 +861,19 @@ for i = istart, iend
   \item A GPU is built around an array of Streaming Multiprocessors (SMs). 
   \item A multithreaded program is partitioned into blocks of threads that execute independently from each other. 
   \item a GPU with more multiprocessors will automatically execute the program in less time than a GPU with fewer multiprocessors.
-    \includegraphics[width=0.5\textwidth]{automatic-scalability}
+    \includegraphics[width=0.5\textwidth]{../slides/image/parprog/automatic-scalability}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Memory Heirarchy}
   \centering{
-    \includegraphics[width=0.5\textwidth]{./memory-hierarchy}
+    \includegraphics[width=0.5\textwidth]{../slides/image/parprog/memory-hierarchy}
     }
 \end{frame}
 
 \begin{frame}{GPU Program}
   \centering{
-    \includegraphics[width=0.5\textwidth]{./heterogeneous-programming}
+    \includegraphics[width=0.5\textwidth]{../slides/image/parprog/heterogeneous-programming}
     }
 \end{frame}
 
@@ -927,7 +927,7 @@ for i = istart, iend
 %  \item 1.208 TFLOPS = 61 cores * 1.238 GHz * 16 DP FLOPs/cycle/core
 %  \end{itemize}
 %  \begin{center}
-%    \includegraphics[width=0.75\textwidth]{./intel_hpc_mica}
+%    \includegraphics[width=0.75\textwidth]{../slides/image/parprog/intel_hpc_mica}
 %  \end{center}
 %\end{frame}
 %

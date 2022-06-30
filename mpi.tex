@@ -11,11 +11,11 @@
 
 \input{mypreamble}
 
-\title{Introduction to MPI}
-\subtitle{2021~HPC~Workshop:~Parallel~Programming}
+\title[MPI]{Introduction to MPI}
+\subtitle{HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
 \institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~13~-~15,~2021}
+\date{}%July~13~-~15,~2021}
     
 \AtBeginSection[]
 {
@@ -285,7 +285,7 @@ Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
 \begin{frame}[fragile, allowframebreaks]{MPI Program Structure}
   \begin{center}
     \vspace{-0.5cm}
-    \includegraphics[height=0.8\textheight]{./prog_structure}
+    \includegraphics[height=0.8\textheight]{../slides/image/parprog/prog_structure}
   \end{center}
   \framebreak
   \begin{itemize}
@@ -327,7 +327,7 @@ Lmod is automatically replacing "mvapich2/2.3.4" with "mpich/3.3.2".
   \item Most MPI routines require you to specify a communicator as an argument.
   \item \lstC{MPI_COMM_WORLD}: the default communicator contains all processes running a MPI program.
     \begin{center}
-      \includegraphics[width=0.5\textwidth]{./comm_world}      
+      \includegraphics[width=0.5\textwidth]{../slides/image/parprog/comm_world}      
     \end{center}
   \item Every process has its own unique, integer identifier assigned, called rank, by the system when the process initializes
   \end{itemize}
@@ -407,12 +407,12 @@ MPI_FINALIZE (ierr)
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{C}
-      \lstinputlisting[language=OmpC]{src/mpi/helloworld.c}
+      \lstinputlisting[language=OmpC]{../slides/code/parprog/src/mpi/helloworld.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[language={OmpFortran}]{src/mpi/helloworld.f90}
+      \lstinputlisting[language={OmpFortran}]{../slides/code/parprog/src/mpi/helloworld.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -437,12 +437,12 @@ MPI_FINALIZE (ierr)
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{C}
-      \lstinputlisting[language=OmpC]{src/mpi/hello.c}
+      \lstinputlisting[language=OmpC]{../slides/code/parprog/src/mpi/hello.c}
     \end{exampleblock}
     \column{0.45\textwidth}
     \vspace{-0.5cm}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[language={OmpFortran}]{src/mpi/hello.f90}
+      \lstinputlisting[language={OmpFortran}]{../slides/code/parprog/src/mpi/hello.f90}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -501,7 +501,7 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
 %  \item A communicator is an identifier associated with a  group of processes
 %    \only<1>{
 %      \begin{center}
-%        \includegraphics[width=0.5\textwidth]{./comm_world}      
+%        \includegraphics[width=0.5\textwidth]{../slides/image/parprog/comm_world}      
 %      \end{center}
 %      \lstC{MPI_Comm_size(MPI_COMM_WORLD,int \&numtasks);}\\
 %      \lstC{MPI_Comm_rank(MPI_COMM_WORLD,int \&rank);}\\
@@ -540,7 +540,7 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
   \begin{itemize}
   \item \lstC{MPI_COMM_WORLD}: the default communicator contains all processes running a MPI program.
     \begin{center}
-      \includegraphics[width=0.5\textwidth]{./comm_world}      
+      \includegraphics[width=0.5\textwidth]{../slides/image/parprog/comm_world}      
     \end{center}
   \item Rank: unique id of each process
     \begin{itemize}
@@ -570,11 +570,11 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
   \begin{columns}
     \column{0.4\textwidth}
     \begin{center}
-      \includegraphics[width=\textwidth]{./SimpleSendAndRecv}
+      \includegraphics[width=\textwidth]{../slides/image/parprog/SimpleSendAndRecv}
     \end{center}
     \column{0.4\textwidth}
     \begin{center}
-      \includegraphics[width=\textwidth]{./collective_comm}
+      \includegraphics[width=\textwidth]{../slides/image/parprog/collective_comm}
     \end{center}
   \end{columns}
 \end{frame}
@@ -606,7 +606,7 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
     \item Typically, a system buffer area is reserved to hold data in transit.
   \end{itemize}
   \centering{
-    \includegraphics[width=0.4\textwidth]{./buffer_recv}
+    \includegraphics[width=0.4\textwidth]{../slides/image/parprog/buffer_recv}
     }
   \begin{block}{System buffer space}
     \begin{itemize}
@@ -656,7 +656,7 @@ Number of tasks= 4 My rank= 1 Running on sol-a106.cc.lehigh.edu
       \item MPI does not guarantee fairness - it’s up to the programmer to prevent “operation starvation”.
     \end{itemize}
     \centering{
-      \includegraphics[width=0.5\textwidth]{./fairness}
+      \includegraphics[width=0.5\textwidth]{../slides/image/parprog/fairness}
     }
   \end{block}
 \end{frame}
@@ -955,7 +955,7 @@ Task  1: Send to task 0 with tag 2 and to task 2 with tag 1
       \item \bflub{Collective Computation (reductions)}: one member of the group collects data from the other members and performs an operation (min, max, add, multiply, etc.) on that data.
     \end{itemize}
     \centering{
-      \includegraphics[width=0.5\textwidth]{./collective_comm}
+      \includegraphics[width=0.5\textwidth]{../slides/image/parprog/collective_comm}
     }
   \end{block}
 \end{frame}
@@ -1071,7 +1071,7 @@ time to compute =    0.014 seconds
     \begin{enumerate}
       \item MPI: \url{https://computing.llnl.gov/tutorials/mpi/}
       \item Advanced MPI: \url{https://hpc.llnl.gov/sites/default/files/DavidCronkSlides.pdf}
-      \item CITutor: \url{https://www.citutor.org/}
+      \item \url{https://www.hpc-training.org/xsede/moodle}
       \item XSEDE HPC Monthly Workshop Series: \url{https://psc.edu/xsede-hpc-series-all-workshops}
     \end{enumerate}
   \end{itemize}

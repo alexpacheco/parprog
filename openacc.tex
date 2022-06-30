@@ -10,11 +10,11 @@
 
 \input{mypreamble}
 
-\title{Introduction to OpenACC}
-\subtitle{2021~HPC~Workshop:~Parallel~Programming}
+\title[OpenACC]{Introduction to OpenACC}
+\subtitle{HPC~Workshop:~Parallel~Programming}
 \author{\large{Alexander~B.~Pacheco}}
 \institute[Lehigh University Research Computing]{\href{http://researchcomputing.lehigh.edu}{Research~Computing}}
-\date{July~13~-~15,~2021}
+\date{}%July~13~-~15,~2021}
     
 
 \begin{document}
@@ -30,41 +30,41 @@
     \item[] \href{http://www.nvidia.com/object/gpu-applications.html}{GPU enabled applications}
   \end{description}
   \centering{
-    \only<1>{\includegraphics[width=0.5\textwidth]{./cpu-and-gpu} }
-    \only<2>{\includegraphics[width=0.75\textwidth]{./gpu-devotes-more-transistors-to-data-processing} }
-    \only<3>{\includegraphics[width=0.75\textwidth]{./floating-point-operations-per-second} }
-    \only<4>{\includegraphics[width=0.5\textwidth]{./memory-bandwidth} }
+    \only<1>{\includegraphics[width=0.5\textwidth]{../slides/image/parprog/cpu-and-gpu} }
+    \only<2>{\includegraphics[width=0.75\textwidth]{../slides/image/parprog/gpu-devotes-more-transistors-to-data-processing} }
+    \only<3>{\includegraphics[width=0.75\textwidth]{../slides/image/parprog/floating-point-operations-per-second} }
+    \only<4>{\includegraphics[width=0.5\textwidth]{../slides/image/parprog/memory-bandwidth} }
     }
 \end{frame}
 
 \begin{frame}{GPU Design}
   \vspace{0.25cm}
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{./Slide03}
+    \includegraphics[width=0.8\textwidth]{../slides/image/parprog/Slide03}
   \end{center}
 \end{frame}
 
 \begin{frame}{Hetergenous Programming}
   \begin{center}
-    \includegraphics[width=\textwidth]{./application_code}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/application_code}
   \end{center}
 \end{frame}
 
 \begin{frame}{Accelerate Application for GPU}
   \begin{center}
-    \includegraphics[width=\textwidth]{./gpuaccelerateapp}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/gpuaccelerateapp}
   \end{center}
 \end{frame}
 
 \begin{frame}{GPU Accelerated Libraries}
   \begin{center}
-    \includegraphics[width=\textwidth]{./gpuacceleratedapps}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/gpuacceleratedapps}
   \end{center}
 \end{frame}
 
 \begin{frame}{GPU Programming Languages}
   \begin{center}
-    \includegraphics[width=\textwidth]{./gpuproglang}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/gpuproglang}
   \end{center}
 \end{frame}
 
@@ -90,7 +90,7 @@
   \begin{columns}
   \column{0.5\textwidth}
   \begin{center}
-    \includegraphics[width=\textwidth]{./whatisopenacc}
+    \includegraphics[width=\textwidth]{../slides/image/parprog/whatisopenacc}
   \end{center}
   \column{0.5\textwidth}
   \begin{block}{}
@@ -109,9 +109,9 @@
   \begin{exampleblock}{History}
     \begin{itemize}
     \item OpenACC was developed by The Portland Group (PGI), Cray, CAPS and NVIDIA. 
-    \item PGI, Cray, and CAPs have spent over 2 years developing and shipping commercial compilers that use directives to enable GPU acceleration as core technology. 
+    \item PGI, Cray, and CAPs developed and shipped commercial compilers that use directives to enable GPU acceleration as core technology. 
     \item The small differences between their approaches allowed the formation of a group to standardize a single directives approach for accelerators and CPUs.
-    \item Full OpenACC 3.1 Specification available online: \url{https://www.openacc.org/specification}
+    \item Full OpenACC 3.2 Specification available online: \url{https://www.openacc.org/specification}
     \end{itemize}
   \end{exampleblock}
 
@@ -215,11 +215,11 @@
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=98,lastline=107]{src/tmp.f90}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=98,lastline=107]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=50,lastline=60]{src/tmp.c}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=50,lastline=60]{../slides/code/parprog/src/tmp.c}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -235,11 +235,11 @@
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=127,lastline=136]{src/tmp.f90}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=127,lastline=136]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=61,lastline=71]{src/tmp.c}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=61,lastline=71]{../slides/code/parprog/src/tmp.c}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -260,11 +260,11 @@
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{Fortran}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=139,lastline=143]{src/tmp.f90}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpFortran,firstline=139,lastline=143]{../slides/code/parprog/src/tmp.f90}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{C/C++}
-      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=72,lastline=75]{src/tmp.c}
+      \lstinputlisting[basicstyle=\tiny\ttfamily,language=OmpC,firstline=72,lastline=75]{../slides/code/parprog/src/tmp.c}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -303,25 +303,25 @@
 
 \begin{frame}[fragile]{SAXPY: Serial}
   \begin{exampleblock}{Serial Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy.f90} 
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy.f90} 
   \end{exampleblock}
 \end{frame}
 \begin{frame}[fragile]{SAXPY: OpenMP}
   \vspace{-0.5cm}
   \begin{exampleblock}{OpenMP Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_omp.f90} 
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_omp.f90} 
   \end{exampleblock}
 \end{frame}
 \begin{frame}[fragile]{SAXPY: OpenACC}
   \vspace{-0.5cm}
   \begin{exampleblock}{OpenACC Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_acc-nodata.f90} 
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_acc-nodata.f90} 
   \end{exampleblock}
 \end{frame}
 \begin{frame}[fragile]{SAXPY: CUDA Fortran}
   \vspace{-0.5cm}
   \begin{exampleblock}{CUDA Fortran Code}
-    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{./src/saxpy/solution/saxpy_cuda.f90} 
+    \lstinputlisting[basicstyle=\fontsize{5}{6}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_cuda.f90} 
   \end{exampleblock}
 \end{frame}
 
@@ -549,11 +549,11 @@ Accelerator Kernel Timing data
 %  \begin{columns}[t]
 %    \column{0.5\textwidth}
 %    \begin{block}{Fortran}
-%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/nodataregion/saxpy_acc.f90} 
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/nodataregion/saxpy_acc.f90} 
 %    \end{block}
 %    \column{0.5\textwidth}
 %    \begin{block}{C}
-%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/nodataregion/saxpy_acc.c} 
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/saxpy/nodataregion/saxpy_acc.c} 
 %    \end{block}
 %  \end{columns}
 %\end{frame}
@@ -620,9 +620,9 @@ Accelerator Kernel Timing data
 %\end{frame}
 
 \begin{frame}{Processing Flow}
-  \only<1>{\includegraphics[width=\textwidth]{./kernel_h-d}}
-  \only<2>{\includegraphics[width=\textwidth]{./kernel_offload}}
-  \only<3>{\includegraphics[width=\textwidth]{./kernel_d-h}}
+  \only<1>{\includegraphics[width=\textwidth]{../slides/image/parprog/kernel_h-d}}
+  \only<2>{\includegraphics[width=\textwidth]{../slides/image/parprog/kernel_offload}}
+  \only<3>{\includegraphics[width=\textwidth]{../slides/image/parprog/kernel_d-h}}
 \end{frame}
 
 \begin{frame}<0>{ Offloading a Parallel Kernel}
@@ -755,9 +755,9 @@ Accelerator Kernel Timing data
 %\begin{frame}[fragile]
 %  \begin{columns}[t]
 %    \column{0.5\textwidth}
-%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy_acc.f90} 
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_acc.f90} 
 %    \column{0.5\textwidth}
-%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_acc.c} 
+%    \lstinputlisting[basicstyle=\fontsize{4}{5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/saxpy/solution/saxpy_acc.c} 
 %  \end{columns}
 %\end{frame}
 
@@ -765,11 +765,11 @@ Accelerator Kernel Timing data
 %  \begin{columns}
 %    \column{0.5\textwidth}
 %    \begin{eblock}{}
-%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/saxpy/solution/saxpy_acc.f90}
+%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/saxpy/solution/saxpy_acc.f90}
 %    \end{eblock}
 %    \column{0.5\textwidth}
 %    \begin{eblock}{}
-%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/saxpy/solution/saxpy_acc.c}
+%      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/saxpy/solution/saxpy_acc.c}
 %    \end{eblock}
 %  \end{columns}
 %  \begin{columns}
@@ -823,42 +823,42 @@ Accelerator Kernel Timing data
 
 %\end{frame}
 
-\begin{frame}[fragile]{OpenACC private Clause}
-  \begin{columns}
-    \column{0.45\textwidth}
-    \begin{block}{}
-      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
-#pragma acc parallel loop
-  for(int i=0;i<M;i++) {
-    for(int jj=0;jj<10;jj++)
-      tmp[jj]=jj;
-    int sum=0;
-    for(int jj=0;jj<N;jj++)
-      sum+=tmp[jj];
-    A[i]=sum;
-  }
-      \end{lstlisting}
-    \end{block}
-    \column{0.45\textwidth}
-    \begin{block}{}
-      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
-#pragma acc parallel loop private(tmp[0:9])
-  for(int i=0;i<M;i++) {
-    for(int jj=0;jj<10;jj++)
-      tmp[jj]=jj;
-    int sum=0;
-    for(int jj=0;jj<N;jj++)
-      sum+=tmp[jj];
-    A[i]=sum;
-  }
-      \end{lstlisting}
-    \end{block}
-  \end{columns}
-  \begin{itemize}
-    \item Compiler cannot parallelize because tmp is shared across threads
-    \item Also useful for live-out scalars
-  \end{itemize}
-\end{frame}
+%\begin{frame}[fragile]{OpenACC private Clause}
+%  \begin{columns}
+%    \column{0.45\textwidth}
+%    \begin{block}{}
+%      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+%#pragma acc parallel loop
+%  for(int i=0;i<M;i++) {
+%    for(int jj=0;jj<10;jj++)
+%      tmp[jj]=jj;
+%    int sum=0;
+%    for(int jj=0;jj<N;jj++)
+%      sum+=tmp[jj];
+%    A[i]=sum;
+%  }
+%      \end{lstlisting}
+%    \end{block}
+%    \column{0.45\textwidth}
+%    \begin{block}{}
+%      \begin{lstlisting}[basicstyle=\small\ttfamily,language=OmpC]
+%#pragma acc parallel loop private(tmp[0:9])
+%  for(int i=0;i<M;i++) {
+%    for(int jj=0;jj<10;jj++)
+%      tmp[jj]=jj;
+%    int sum=0;
+%    for(int jj=0;jj<N;jj++)
+%      sum+=tmp[jj];
+%    A[i]=sum;
+%  }
+%      \end{lstlisting}
+%    \end{block}
+%  \end{columns}
+%  \begin{itemize}
+%    \item Compiler cannot parallelize because tmp is shared across threads
+%    \item Also useful for live-out scalars
+%  \end{itemize}
+%\end{frame}
 
 \begin{frame}[fragile,allowframebreaks]{OpenACC reduction Clause}
   \begin{itemize}
@@ -1060,7 +1060,7 @@ for(int ij=0; ij<N*N; ij++)
     \end{itemize}
     \column{5cm}
     \begin{center}
-      \includegraphics[width=4cm]{./pi}
+      \includegraphics[width=4cm]{../slides/image/parprog/pi}
     \end{center}
   \end{columns}
 
@@ -1081,11 +1081,11 @@ for(int ij=0; ij<N*N; ij++)
   \begin{columns}
     \column{0.45\textwidth}
     \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/calc_pi/solution/pi_acc.f90}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/calc_pi/solution/pi_acc.f90}
     \end{exampleblock}
     \column{0.45\textwidth}
     \begin{exampleblock}{}
-      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/calc_pi/solution/pi_acc.c}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/calc_pi/solution/pi_acc.c}
     \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -1098,7 +1098,7 @@ for(int ij=0; ij<N*N; ij++)
     \item Write a MATMUL code to multiple two matrices.
   \end{itemize}
   \begin{center}
-    \includegraphics[width=0.6\textwidth]{./matmul}
+    \includegraphics[width=0.6\textwidth]{../slides/image/parprog/matmul}
   \end{center}
 
   \begin{algorithm}[H]
@@ -1122,13 +1122,13 @@ for(int ij=0; ij<N*N; ij++)
     \vspace{-1cm}
     \begin{exampleblock}{}
       \vspace{-0.25cm}
-      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{src/matmul/solution/matmul_acc.f90}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpFortran]{../slides/code/parprog/src/matmul/solution/matmul_acc.f90}
     \end{exampleblock}
     \column{0.44\textwidth}
     \vspace{-1cm}
     \begin{exampleblock}{}
       \vspace{-0.25cm}
-      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{src/matmul/solution/matmul_acc.c}
+      \lstinputlisting[basicstyle=\fontsize{3}{3.5}\selectfont\ttfamily,language=OmpC]{../slides/code/parprog/src/matmul/solution/matmul_acc.c}
     \end{exampleblock}
   \end{columns}
 
